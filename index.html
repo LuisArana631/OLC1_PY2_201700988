@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="assets/css/Navbar---Apple.css">
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+
+    <link rel="stylesheet" href="codemirror-5.53.2/theme/darcula.css">
+    <link rel="stylesheet" href="codemirror-5.53.2/lib/codemirror.css">
 </head>
 
 <body style="background-color: rgb(65,71,77);">
@@ -38,11 +41,24 @@
                     <li class="nav-item" role="presentation"></li>
                     <li class="nav-item" role="presentation"></li>
                 </ul><span class="navbar-text actions"> </span><button class="btn btn-primary border-white" type="button" style="background-color: rgb(192,11,16);"><input type="file"></button><button class="btn btn-primary border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Evaluar</button>
-                <button
-                    class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Nueva Pestaña</button><button class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" type="button"
+                <button class="btn btn-primary border rounded border-white" id="btn-add" type="button" style="background-color: rgb(192,11,16);height: 44px;">Nueva Pestaña</button><button class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" type="button"
                         style="background-color: rgb(192,11,16);height: 44px;">Reportes</button></div><button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button></div>
     </nav>
-    <div id="pestana" style="min-height: 550px;"></div>
+
+    <!-- Lista de pestañas -->
+    <div id="pestana" style="min-height: 550px;">
+        <ul id=list>
+            
+        </ul>  
+    </div>
+
+    <!-- Contenedor de pestañas -->
+    <body>
+        <div id= "contenedorPestanas">
+
+        </div>
+    </body>
+
     <div class="footer-dark" style="background-color: rgb(2,2,28);background-image: url(&quot;assets/img/navbar.jpg&quot;);background-size: cover;">
         <footer>
             <div class="container">
@@ -66,6 +82,9 @@
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/Footer---Made-with-love.js"></script>
     <script src="assets/js/Navbar---Apple.js"></script>
+    <script src="codemirror-5.53.2/lib/codemirror.js"></script>
+    <script src="codemirror-5.53.2/mode/clike/clike.js"></script>
+    <script src="src/js/index.js"></script>
 </body>
 
 </html>
