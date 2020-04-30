@@ -29,6 +29,12 @@ function index(pestanas, pestana) {
     var list_pestanas = document.getElementById(pestanas);
     var cont_pestana = document.getElementById('c' + pestana);
     var list_cont = document.getElementById('contenido' + pestanas);
+    console.log("pestana:" + pestana);
+    console.log("pestanas:" + pestanas);
+    console.log(pestana1);
+    console.log(list_pestanas);
+    console.log(cont_pestana);
+    console.log(list_cont);
     var i = 0;
     while (typeof list_cont.getElementsByTagName('div')[i] != 'undefined') {
         $(document).ready(function () {
@@ -36,7 +42,7 @@ function index(pestanas, pestana) {
             $(list_pestanas.getElementsByTagName('li')[i]).css('background', '');
             $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom', '');
         });
-        i++;
+        i += 1;
     }
     $(document).ready(function () {
         $(cont_pestana).css('display', '');
@@ -100,6 +106,40 @@ function add() {
 let addButton = document.getElementById('btn-add');
 addButton.addEventListener('click', add, false);
 function quit() {
+    try {
+        var lu = document.getElementById("lista");
+        lu.removeChild(document.getElementById(get_pest().replace("textarea", "pestana")));
+        var contenido = document.getElementById("contenidopestanas");
+        contenido.removeChild(document.getElementById(get_pest().replace("textarea", "cpestana")));
+    }
+    catch (error) { }
+}
+let deleteButton = document.getElementById('btn-delete');
+deleteButton.addEventListener('click', quit, false);
+function openFile(files) {
+    var file = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var _a;
+        var actual = document.getElementById(get_pest().replace("textarea", "cpestana"));
+        var text_actual = document.getElementById(get_pest());
+        text_actual.value = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
+        while (actual.firstChild) {
+            actual.removeChild(actual.firstChild);
+        }
+        actual.appendChild(text_actual);
+        var edit = CodeMirror(actual, {
+            lineNumbers: true,
+            value: text_actual.value,
+            theme: "darcula",
+            mode: "text/x-java"
+        }).on('change', edit => {
+            text_actual.value = edit.getValue();
+        });
+    };
+    reader.readAsText(file);
+    var a = document.getElementById(get_pest().replace("textarea", "a"));
+    a.text = file.name;
 }
 class pestana_class {
     constructor(pestana_id, nombre) {
