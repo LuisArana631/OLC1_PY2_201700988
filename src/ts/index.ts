@@ -170,9 +170,44 @@ function openFile(files:FileList){
 
     reader.readAsText(file);
     
-    var a:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea", "a"));
-    a.text = file.name;
+    var a:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea", "a"));
+    a.value = file.name;
+    insert_pest(get_pest(),file.name);
+
+    var file_input = document.getElementById("fileInput");
+    (<HTMLTextAreaElement> document.getElementById('fileInput')).value = "";
 }
+
+function downloadFile(){
+    var ta:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest());
+    var contenido = ta.value;
+
+    var title:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea","a"));
+    var nombre = title.value + ".java";   
+
+    if(nombre === 'undefined.java'){
+        nombre = 'untitled.java'
+    }
+
+    var file = new Blob([contenido], {type: 'text/plain'});
+
+    if(window.navigator.msSaveOrOpenBlob){
+        window.navigator.msSaveOrOpenBlob(file,nombre);
+    }else{
+        var a = document.createElement("a"), url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = nombre;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        },0);
+    }
+}
+
+let saveButton:HTMLButtonElement = <HTMLButtonElement> document.getElementById('btn-save');
+saveButton.addEventListener('click',downloadFile,false);
 
 class pestana_class{
     private pestana_id:string;

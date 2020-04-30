@@ -139,8 +139,37 @@ function openFile(files) {
     };
     reader.readAsText(file);
     var a = document.getElementById(get_pest().replace("textarea", "a"));
-    a.text = file.name;
+    a.value = file.name;
+    insert_pest(get_pest(), file.name);
+    var file_input = document.getElementById("fileInput");
+    document.getElementById('fileInput').value = "";
 }
+function downloadFile() {
+    var ta = document.getElementById(get_pest());
+    var contenido = ta.value;
+    var title = document.getElementById(get_pest().replace("textarea", "a"));
+    var nombre = title.value + ".java";
+    if (nombre === 'undefined.java') {
+        nombre = 'untitled.java';
+    }
+    var file = new Blob([contenido], { type: 'text/plain' });
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(file, nombre);
+    }
+    else {
+        var a = document.createElement("a"), url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = nombre;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
+}
+let saveButton = document.getElementById('btn-save');
+saveButton.addEventListener('click', downloadFile, false);
 class pestana_class {
     constructor(pestana_id, nombre) {
         this.pestana_id = pestana_id;

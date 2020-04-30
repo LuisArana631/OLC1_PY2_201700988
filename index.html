@@ -42,11 +42,11 @@
                     <li class="nav-item" role="presentation"></li>
                     <li class="nav-item" role="presentation"></li>
                 </ul><span class="navbar-text actions"> </span>
-                <button class="btn btn-primary border-white" type="button" id="btn-open" onchange="openFile(this.files)" style="background-color: rgb(192,11,16);"><input type="file"></button>
+                <button class="btn btn-primary border-white" type="button" id="btn-open" style="background-color: rgb(192,11,16);"><input type="file" onchange="openFile(this.files)"></button>
                 <button class="btn btn-primary border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Evaluar</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-add" type="button" style="background-color: rgb(192,11,16);height: 44px;">Nueva Pestaña</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-delete" type="button" style="background-color: rgb(192,11,16);height: 44px;">Quitar Pestaña</button>
-                <button class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Reportes</button></div>
+                <button class="btn btn-primary border rounded border-white" id="btn-save" type="button" style="background-color: rgb(192,11,16);height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" type="button" style="background-color: rgb(192,11,16);height: 44px;">Reportes</button></div>
             <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         </div>
     </nav>
@@ -88,7 +88,6 @@
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery-1.7.2.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/Footer---Made-with-love.js"></script>
     <script src="assets/js/Navbar---Apple.js"></script>
     <script src="codemirror-5.53.2/lib/codemirror.js"></script>
