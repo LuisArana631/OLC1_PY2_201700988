@@ -1,6 +1,6 @@
 "use strict";
 var count = 0;
-var pest_focus = "pestaña_1";
+var pest_focus = "pestana1";
 var list_pest = new Array;
 function get_count() {
     return count++;
@@ -27,37 +27,29 @@ function index(pestanas, pestana) {
     set_pest('textarea' + id);
     var pestana1 = document.getElementById(pestana);
     var list_pestanas = document.getElementById(pestanas);
-    var cont_pestana = document.getElementById('cont' + pestana);
-    var list_cont = document.getElementById('cont' + pestanas);
+    var cont_pestana = document.getElementById('c' + pestana);
+    var list_cont = document.getElementById('contenido' + pestanas);
     var i = 0;
-    while (typeof (list_cont === null || list_cont === void 0 ? void 0 : list_cont.getElementsByTagName('div')[i]) != 'undefined') {
+    while (typeof list_cont.getElementsByTagName('div')[i] != 'undefined') {
         $(document).ready(function () {
-            if (list_cont) {
-                $(list_cont.getElementsByTagName('div')[i]).css('display', 'none');
-                $(list_cont.getElementsByTagName('li')[i]).css('background', '');
-                $(list_cont.getElementsByTagName('li')[i]).css('padding-bottom', '');
-            }
+            $(list_cont.getElementsByTagName('div')[i]).css('display', 'none');
+            $(list_pestanas.getElementsByTagName('li')[i]).css('background', '');
+            $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom', '');
         });
         i++;
     }
     $(document).ready(function () {
-        if (cont_pestana) {
-            $(cont_pestana).css('display', '');
-        }
-        if (pestana1) {
-            $(pestana1).css('backgroun', 'dimgray');
-            $(pestana1).css('padding-bottom', '2px');
-        }
+        $(cont_pestana).css('display', '');
+        $(pestana1).css('background', 'dimgray');
+        $(pestana1).css('padding-bottom', '2px');
     });
     try {
         var actual = document.getElementById('cpestana' + id);
         var text_actual = document.getElementById('textarea' + id);
-        while (actual === null || actual === void 0 ? void 0 : actual.firstChild) {
+        while (actual.firstChild) {
             actual.removeChild(actual.firstChild);
         }
-        if (text_actual) {
-            actual === null || actual === void 0 ? void 0 : actual.appendChild(text_actual);
-        }
+        actual.appendChild(text_actual);
         var edit = CodeMirror(actual, {
             lineNumbers: true,
             value: text_actual.value,
@@ -72,17 +64,17 @@ function index(pestanas, pestana) {
 }
 function add() {
     var num = get_count();
-    var lu = document.getElementById("list");
+    var lu = document.getElementById("lista");
     var li = document.createElement("li");
     li.setAttribute('id', 'pestana' + num);
     var a = document.createElement("a");
     a.setAttribute('id', 'a' + num);
     a.setAttribute('href', 'javascript:index("pestanas","pestana' + num + '")');
-    a.text = 'pestana ' + num;
+    a.text = 'pestana' + num;
     li.appendChild(a);
     lu.appendChild(li);
     index("pestanas", "pestana" + num);
-    var contenido = document.getElementById("contenedorPestanas");
+    var contenido = document.getElementById("contenidopestanas");
     var divp = document.createElement("div");
     var ta = document.createElement("textarea");
     divp.setAttribute('id', 'cpestana' + num);
