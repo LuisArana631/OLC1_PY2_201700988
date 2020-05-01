@@ -170,8 +170,8 @@ function openFile(files:FileList){
 
     reader.readAsText(file);
     
-    var a:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea", "a"));
-    a.value = file.name;
+    var a:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea", "a"));
+    a.textContent = file.name;
     insert_pest(get_pest(),file.name);
 
     var file_input = document.getElementById("fileInput");
@@ -183,9 +183,9 @@ function downloadFile(){
     var contenido = ta.value;
 
     var title:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea","a"));
-    var nombre = title.value + ".java";   
+    var nombre = title.value;   
 
-    if(nombre === 'undefined.java'){
+    if(nombre === 'undefined'){
         nombre = 'untitled.java'
     }
 

@@ -139,7 +139,7 @@ function openFile(files) {
     };
     reader.readAsText(file);
     var a = document.getElementById(get_pest().replace("textarea", "a"));
-    a.value = file.name;
+    a.textContent = file.name;
     insert_pest(get_pest(), file.name);
     var file_input = document.getElementById("fileInput");
     document.getElementById('fileInput').value = "";
@@ -148,8 +148,8 @@ function downloadFile() {
     var ta = document.getElementById(get_pest());
     var contenido = ta.value;
     var title = document.getElementById(get_pest().replace("textarea", "a"));
-    var nombre = title.value + ".java";
-    if (nombre === 'undefined.java') {
+    var nombre = title.value;
+    if (nombre === 'undefined') {
         nombre = 'untitled.java';
     }
     var file = new Blob([contenido], { type: 'text/plain' });
