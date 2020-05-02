@@ -1,3 +1,4 @@
+//Config of save,up files and tabs
 var count:number = 0;
 var pest_focus:string = "pestana1";
 var list_pest:Array<pestana_class> = new Array;
@@ -31,10 +32,10 @@ function index(pestanas:string, pestana:string){
     var id = pestana.replace('pestana', '');
     set_pest('textarea'+id);
 
-    var pestana1:HTMLElement = <HTMLElement> document.getElementById(pestana);    
+    var pestana1:HTMLElement = <HTMLElement> document.getElementById(pestana);
     var list_pestanas:HTMLElement = <HTMLElement> document.getElementById(pestanas);
     var cont_pestana:HTMLElement = <HTMLElement> document.getElementById('c'+pestana);
-    var list_cont:HTMLElement = <HTMLElement> document.getElementById('contenido'+pestanas);  
+    var list_cont:HTMLElement = <HTMLElement> document.getElementById('contenido'+pestanas);
 
     console.log("pestana:" + pestana);
     console.log("pestanas:" +pestanas);
@@ -46,18 +47,18 @@ function index(pestanas:string, pestana:string){
     var i=0;
     while(typeof list_cont.getElementsByTagName('div')[i] != 'undefined'){
         $(document).ready(function(){
-            $(list_cont.getElementsByTagName('div')[i]).css('display','none');                
+            $(list_cont.getElementsByTagName('div')[i]).css('display','none');
             $(list_pestanas.getElementsByTagName('li')[i]).css('background','');
-            $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom','');            
+            $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom','');
         });
         i+=1;
     }
 
     $(document).ready(function(){
-        $(cont_pestana).css('display','');                    
+        $(cont_pestana).css('display','');
         $(pestana1).css('background','dimgray');
         $(pestana1).css('padding-bottom','2px');
-        
+
     });
 
     try{
@@ -66,18 +67,18 @@ function index(pestanas:string, pestana:string){
 
         while(actual.firstChild){
             actual.removeChild(actual.firstChild);
-        }        
+        }
 
-        actual.appendChild(text_actual);        
+        actual.appendChild(text_actual);
         var edit = CodeMirror(actual, {
             lineNumbers: true,
-            value: text_actual.value,                     
+            value: text_actual.value,
             theme: "darcula",
             mode: "text/x-java"
         }).on('change', edit =>{
             text_actual.value = edit.getValue();
         });
-        
+
     }catch(error){
 
     }
@@ -125,7 +126,7 @@ function add(){
         mode: "text/x-java"
     }).on('change', editor => {
         tact.value = editor.getValue();
-    });    
+    });
 }
 
 let addButton:HTMLButtonElement = <HTMLButtonElement> document.getElementById('btn-add');
@@ -149,7 +150,7 @@ function openFile(files:FileList){
 
     reader.onload = function(e:ProgressEvent<FileReader>){
         var actual:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea","cpestana"));
-        var text_actual:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest());       
+        var text_actual:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest());
 
         text_actual.value = <string> e.target?.result;
         while(actual.firstChild){
@@ -169,7 +170,7 @@ function openFile(files:FileList){
     };
 
     reader.readAsText(file);
-    
+
     var a:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea", "a"));
     a.textContent = file.name;
     insert_pest(get_pest(),file.name);
@@ -183,7 +184,7 @@ function downloadFile(){
     var contenido = ta.value;
 
     var title:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea","a"));
-    var nombre = title.value;   
+    var nombre = title.value;
 
     if(nombre === 'undefined'){
         nombre = 'untitled.java'
@@ -212,7 +213,7 @@ saveButton.addEventListener('click',downloadFile,false);
 class pestana_class{
     private pestana_id:string;
     private nombre:string;
-    
+
     constructor(pestana_id:string, nombre:string){
         this.pestana_id = pestana_id;
         this.nombre = nombre;

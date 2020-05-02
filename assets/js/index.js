@@ -1,4 +1,5 @@
 "use strict";
+//Config of save,up files and tabs
 var count = 0;
 var pest_focus = "pestana1";
 var list_pest = new Array;
