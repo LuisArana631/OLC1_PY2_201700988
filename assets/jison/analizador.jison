@@ -101,6 +101,13 @@ id ({letra}|"_"+)({letra}|{numero}|"_")* return 'IDENTIFICADOR';
 /* CADENAS */
 cadena "\""[^"\""]*"\"" return {yytext = yytext.substr(1,yyleng-2); return 'CADENA';}
 
+<<EOF>> return 'EOF';
+
+. {console.error('Este es un error léxico: ' + yytext + ', en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+
 /* SINTACTICO */
 /lex
+
+%start init
+
 %%
