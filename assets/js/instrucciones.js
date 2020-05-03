@@ -42,7 +42,8 @@ exports.TIPO_INSTRUCCION = {
     VOID: 'IN_VOID',
     PRINT: 'IN_PRINT',
     PRINTLN: 'IN_PRINTLN',
-    DECLARACION: 'IN_DECLARACION',
+    DECLARACION_VAR: 'IN_DECLARACION_VAR',
+    DECLARACION_FUN: 'IN_DECLARACION_FUN',
 };
 exports.TIPO_TRANSFERENCIA = {
     BREAK: 'TR_BREAK',
@@ -51,19 +52,45 @@ exports.TIPO_TRANSFERENCIA = {
     DEFAULT: 'TR_DEFAULT',
     CASE: 'TR_CASE',
 };
+function nuevaOperacion(operandoIzq, operandoDer, tipo) {
+    return {
+        operandoIzq: operandoIzq,
+        operandoDer: operandoDer,
+        tipo: tipo
+    };
+}
 exports.instruccionesAPI = {
-    /* OBJ PARA OPERACION */
-    nuevaOperacion: function (operandoIzq, operandoDer, tipo) {
+    /* OBJ PARA CREAR UNA VARIABLE */
+    nuevoValor: function (valor, tipo) {
         return {
-            operandoIzq: operandoIzq,
-            operandoDer: operandoDer,
-            tipo: tipo
+            tipo: tipo,
+            valor: valor
         };
     },
-    /* OBJ PARA DECLARACION */
-    nuevoDeclaracion: function (identificadores, tipo) {
+    /* OBJ OPERACION CON UN VALOR */
+    nuevaOperacionUnaria: function (operando, tipo) {
+        return nuevaOperacion(operando, undefined, tipo);
+    },
+    /* OBJ PARA OPERACION CON DOS VALORES */
+    nuevaOperacionBinaria: function (operandoIzq, operandoDer, tipo) {
+        return nuevaOperacion(operandoIzq, operandoDer, tipo);
+    },
+    /* OBJ PARA DECLARACION DE FUNCIONES */
+    nuevaDeclaracionFun: function () {
+    },
+    /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
+    nuevoDeclaracionVarItem: function (identificadores, tipo, valor) {
         return {
-            tipo: exports.TIPO_INSTRUCCION.DECLARACION,
+            tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
+            identificadores: identificadores,
+            tipo_dato: tipo,
+            valor: valor
+        };
+    },
+    /* OBJ PARA DECLARACION DE VARIABLES VACIAS*/
+    nuevoDeclaracionVar: function (identificadores, tipo) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
             identificadores: identificadores,
             tipo_dato: tipo
         };

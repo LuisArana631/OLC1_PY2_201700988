@@ -56,14 +56,31 @@ export const TIPO_TRANSFERENCIA = {
   CASE: 'TR_CASE',
 }
 
+function nuevaOperacion (operandoIzq:any, operandoDer:any, tipo:any){
+  return{
+    operandoIzq: operandoIzq,
+    operandoDer: operandoDer,
+    tipo: tipo
+  }
+}
+
 export const instruccionesAPI = {
-  /* OBJ PARA OPERACION */
-  nuevaOperacion: function (operandoIzq:any, operandoDer:any, tipo:any){
-    return{
-      operandoIzq: operandoIzq,
-      operandoDer: operandoDer,
-      tipo: tipo
+  /* OBJ PARA CREAR UNA VARIABLE */
+  nuevoValor: function(valor:any, tipo:any){
+    return {
+      tipo: tipo,
+      valor: valor
     }
+  },
+
+  /* OBJ OPERACION CON UN VALOR */
+  nuevaOperacionUnaria: function(operando:any,tipo:any){
+    return nuevaOperacion(operando,undefined,tipo);
+  },
+
+  /* OBJ PARA OPERACION CON DOS VALORES */
+  nuevaOperacionBinaria: function (operandoIzq:any, operandoDer:any, tipo:any){
+    return nuevaOperacion(operandoIzq, operandoDer, tipo);
   },
 
   /* OBJ PARA DECLARACION DE FUNCIONES */

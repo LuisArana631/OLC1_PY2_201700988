@@ -6,8 +6,8 @@
 \s+ /* IGNORAR */
 
 /* COMENTARIOS */
-comentarioMultilinea "/*"[^'*']*"*/" /* IGNORAR COMENTARIO */
-comentario "//".* /* IGNORAR COMENTARIO */
+"//".* /* IGNORAR COMENTARIO */
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] /* IGNORAR COMENTARIO */
 
 /* TIPOS DE DATOS */
 "int" return 'RINT';
@@ -69,6 +69,8 @@ comentario "//".* /* IGNORAR COMENTARIO */
 "static" return 'RSTATIC';
 "main" return 'RMAIN';
 "args" return 'RARGS';
+"true" return 'RTRUE';
+"false" return 'RFALSE';
 
 /* CARACTERES ESPECIALES */
 "{" return 'LLAVIZQ';
@@ -78,27 +80,18 @@ comentario "//".* /* IGNORAR COMENTARIO */
 "=" return 'IGUAL';
 ";" return 'PTOCOMA';
 ":" return 'DOSPTS';
-"(" return 'PARDER';
-")" return 'PARIZQ';
-
-/* LETRAS */
-letra [a-zñA-ZÑ]+   /* IGNORAR LETRAS SOLAS */
-
-/* VALORES BOOLEANOS */
-booleano ("true"|"false") return 'BOOLEANO';
+"(" return 'PARIZQ';
+")" return 'PARDER';
 
 /* NUMEROS */
-numero [0-9]+ return 'ENTERO';
-decimal [0-9]+"."[0-9]+ return 'DECIMAL';
-
-/* CHARS */
-caracter "\'"("\\")?([a-zñA-ZÑ]|{numero})"\'"; return 'CARACTER';
+[0-9]+\b return 'ENTERO';
+[0-9]+"."[0-9]+\b return 'DECIMAL';
 
 /* IDENTIFICADORES */
-id ({letra}|"_"+)({letra}|{numero}|"_")* return 'IDENTIFICADOR';
+([a-zA-Z])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
 
 /* CADENAS */
-cadena "\""[^"\""]*"\"" return {yytext = yytext.substr(1,yyleng-2); return 'CADENA';}
+\"[^\"]*\" { yytext = yytext.substr( 1 , yyleng-2 ); return 'CADENA'; }
 
 <<EOF>> return 'EOF';
 
@@ -108,38 +101,26 @@ cadena "\""[^"\""]*"\"" return {yytext = yytext.substr(1,yyleng-2); return 'CADE
 /lex
 
 %{
-  const TIPO_VALOR = require('../assets/js/instrucciones').TIPO_VALOR;
-  const TIPO_OPERACION = require('../assets/js/instrucciones').TIPO_OPERACION;
-  const instruccionesAPI = require('../assets/js/instrucciones').instruccionesAPI;
-}%
+  const TIPO_VALOR = require('../js/instrucciones').TIPO_VALOR;
+  const TIPO_OPERACION = require('../js/instrucciones').TIPO_OPERACION;
+  const instruccionesAPI = require('../js/instrucciones').instruccionesAPI;
+%}
 
 %start ini
 %%
 
-ini:instrucciones EOF { return $1 };
+ini
+  :instrucciones EOF { return $1; };
 
 instrucciones
   :instrucciones instruccion  { $1.push($2); $$ = $1; }
-  |instruccion  { $$ = [$1] };
+  |instruccion  { $$ = [$1]; };
 
 instruccion
   /* INSTRUCCIONES DE PRINT Y PRINTLN */
-  :RPRINTLN PARIZQ expresion_cadenas PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
-  |RPRINT PARIZQ expresion_cadenas PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint ($3); }
-  /* DECLARACION DE VARIABLES */
-  |tipo_dato lista_identificadores PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
-  |tipo_dato lista_identificadores IGUAL expresion PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarItem($2,$1,$4); }
+  :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
+  |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); };
 
-expresion_cadenas
-
-
-tipo_dato
-  :RINT
-  |RDOUBLE
-  |RBOOLEAN
-  |RCHAR
-  |RSTRING;
-
-lista_identificadores
-
-expresion
+expresion_cadena
+  :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
+  |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); };
