@@ -9,7 +9,6 @@
 comentarioMultilinea "/*"[^'*']*"*/" /* IGNORAR COMENTARIO */
 comentario "//".* /* IGNORAR COMENTARIO */
 
-
 /* TIPOS DE DATOS */
 "int" return 'RINT';
 "double"  return 'RDOUBLE';
@@ -108,6 +107,39 @@ cadena "\""[^"\""]*"\"" return {yytext = yytext.substr(1,yyleng-2); return 'CADE
 /* SINTACTICO */
 /lex
 
-%start init
+%{
+  const TIPO_VALOR = require('../assets/js/instrucciones').TIPO_VALOR;
+  const TIPO_OPERACION = require('../assets/js/instrucciones').TIPO_OPERACION;
+  const instruccionesAPI = require('../assets/js/instrucciones').instruccionesAPI;
+}%
 
+%start ini
 %%
+
+ini:instrucciones EOF { return $1 };
+
+instrucciones
+  :instrucciones instruccion  { $1.push($2); $$ = $1; }
+  |instruccion  { $$ = [$1] };
+
+instruccion
+  /* INSTRUCCIONES DE PRINT Y PRINTLN */
+  :RPRINTLN PARIZQ expresion_cadenas PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
+  |RPRINT PARIZQ expresion_cadenas PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint ($3); }
+  /* DECLARACION DE VARIABLES */
+  |tipo_dato lista_identificadores PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
+  |tipo_dato lista_identificadores IGUAL expresion PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarItem($2,$1,$4); }
+
+expresion_cadenas
+
+
+tipo_dato
+  :RINT
+  |RDOUBLE
+  |RBOOLEAN
+  |RCHAR
+  |RSTRING;
+
+lista_identificadores
+
+expresion
