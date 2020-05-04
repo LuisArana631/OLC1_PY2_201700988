@@ -78,6 +78,7 @@
 "[" return 'CORIZQ';
 "]" return 'CORDER';
 "=" return 'IGUAL';
+"," return "COMA";
 ";" return 'PTOCOMA';
 ":" return 'DOSPTS';
 "(" return 'PARIZQ';
@@ -88,14 +89,14 @@
 [0-9]+"."[0-9]+\b return 'DECIMAL';
 
 /* IDENTIFICADORES */
-([a-zA-Z])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
+([a-zA-Z_])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
 
 /* CADENAS */
 \"[^\"]*\" { yytext = yytext.substr( 1 , yyleng-2 ); return 'CADENA'; }
 
 <<EOF>> return 'EOF';
 
-. {console.error('Este es un error léxico: ' + yytext + ', en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+. {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 
 /* SINTACTICO */
 /lex
@@ -119,8 +120,67 @@ instrucciones
 instruccion
   /* INSTRUCCIONES DE PRINT Y PRINTLN */
   :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
-  |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); };
+  |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
+  /* DEFINICION DE CLASES */
+  |RCLASS IDENTIFICADOR LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
+  |RCLASS IDENTIFICADOR LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevaClase($2); }
+  /* IMPORTAR CLASES */
+  |RIMPORT IDENTIFICADOR PTOCOMA { $$ = instruccionesAPI.nuevoImport($2); }
+  /* DECLARAR VARIABLES */
+  |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
+  |tipo_dato lista_id IGUAL expresion PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
+  /* ERRORES */
+  |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
-  |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); };
+  |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
+  |llamada_funcion { $$ = $1; }
+  |expresion_numerica { $$ = $1; }
+  |IDENTIFICADOR { $$ = $1; };
+
+llamada_funcion
+  :IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1,$3); }
+  |IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstancia($1); };
+
+expresion_numerica
+  :expresion_numerica MAS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
+  |expresion_numerica MENOS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.RESTA); }
+  |expresion_numerica MULTIPLICACION expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MULTIPLICACION); }
+  |expresion_numerica DIVISION expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
+  |expresion_numerica MODULO expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
+  |expresion_numerica POTENCIA expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |PARIZQ expresion_numerica PARDER { $$ = $2; }
+  |ENTERO { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.NUMERO); }
+  |DECIMAL { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.NUMERO); }
+  |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.IDENTIFICADOR); }
+  |llamada_funcion { $$ = $1; };
+
+parametros
+  :parametros COMA parametro { $1.push($3); $$ = $1; }
+  |parametro  { $$ = [$1]};
+
+parametro
+  :IDENTIFICADOR  { $$ = $1; }
+  |CADENA { $$ = $1; }
+  |ENTERO { $$ = $1; }
+  |DECIMAL { $$ = $1; }
+  |RTRUE { $$ = $1; }
+  |RFALSE { $$ = $1; }
+  |llamada_funcion { $$ = $1; };
+
+tipo_dato
+  :RINT { $$ = $1; }
+  |RDOUBLE { $$ = $1; }
+  |RBOOLEAN { $$ = $1; }
+  |RCHAR { $$ = $1; }
+  |RSTRING { $$ = $1; };
+
+lista_id
+  :lista_id COMA IDENTIFICADOR { $1.push($3); $$ = $1; }
+  |IDENTIFICADOR { $$ = [$1]; };
+
+expresion
+  :expresionCadena { $$ = $1;}
+  |RTRUE { $$ = $1;}
+  |RFALSE { $$ = $1;};

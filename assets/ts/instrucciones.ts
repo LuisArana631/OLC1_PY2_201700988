@@ -64,7 +64,57 @@ function nuevaOperacion (operandoIzq:any, operandoDer:any, tipo:any){
   }
 }
 
+function nuevaLlamadaFuncion(id:any,parametros:any){
+  return{
+    id: id,
+    parametros: parametros
+  }
+}
+
+function nuevaClase(id:any, instrucciones:any){
+  return{
+    tipo:  TIPO_INSTRUCCION.CLASS,
+    id: id,
+    instrucciones: instrucciones
+  }
+}
+
 export const instruccionesAPI = {
+  /* OBJ PARA HACER IMPORTS */
+  nuevoImport: function(identificador:any){
+    return{
+      tipo: TIPO_INSTRUCCION.IMPORT,
+      identificador: identificador
+    }
+  },
+
+  /* OBJ PARA CLASES SIN INSTRUCCIONES */
+  nuevaClase: function(identificador:any){
+    return nuevaClase(identificador, undefined);
+  },
+
+  /* OBJ PARA CLASES CON INSTRUCCIONES */
+  nuevaClaseInstrucciones: function(identificador:any, instrucciones:any){
+    return nuevaClase(identificador, instrucciones);
+  },
+
+  /* OBJ PARA PARAMETROS */
+  nuevoParametros: function(parametro:any){
+    return {
+      parametro: parametro
+    }
+  },
+
+  /* OBJ PARA CREAR INSTANCIA VACIA */
+  nuevaInstancia: function(id:any, parametros:any){
+    return nuevaLlamadaFuncion(id,parametros);
+  },
+
+  /* OBJ PARA CREAR INSTANCIA CON PARAMETROS */
+  nuevaInstanciaParametros: function(id:any){
+    return nuevaLlamadaFuncion(id,undefined);
+  },
+
   /* OBJ PARA CREAR UNA VARIABLE */
   nuevoValor: function(valor:any, tipo:any){
     return {
@@ -89,7 +139,7 @@ export const instruccionesAPI = {
   },
 
   /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
-  nuevoDeclaracionVarItem: function(identificadores:any, tipo:any, valor:any){
+  nuevoDeclaracionVarValor: function(identificadores:any, tipo:any, valor:any){
     return{
         tipo: TIPO_INSTRUCCION.DECLARACION_VAR,
         identificadores: identificadores,

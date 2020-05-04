@@ -1,0 +1,9 @@
+System.out.println(var()+"putamadre");
+import class2;
+import _clas3;
+class clase1{
+  System.out.println("hola");
+}
+class vacia{}
+
+System.out.print("mierda"+class2+class5);
