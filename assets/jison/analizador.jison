@@ -85,8 +85,8 @@
 ")" return 'PARDER';
 
 /* NUMEROS */
+[0-9]+("."[0-9]+)?\b return 'DECIMAL';
 [0-9]+\b return 'ENTERO';
-[0-9]+"."[0-9]+\b return 'DECIMAL';
 
 /* IDENTIFICADORES */
 ([a-zA-Z_])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
@@ -98,7 +98,6 @@
 
 . {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 
-/* SINTACTICO */
 /lex
 
 %{
@@ -107,11 +106,17 @@
   const instruccionesAPI = require('../js/instrucciones').instruccionesAPI;
 %}
 
+/* ASOCIACION Y PRECEDENCIA */
+%left 'MAS' 'MENOS'
+%left 'MULTIPLICACION' 'DIVISION' 'POTENCIA' 'MODULO'
+%left 'PARDER' 'PARIZQ'
+
+/* SINTACTICO */
 %start ini
 %%
 
 ini
-  :instrucciones EOF { return $1; };
+  :instrucciones EOF { console.log($1); return $1; };
 
 instrucciones
   :instrucciones instruccion  { $1.push($2); $$ = $1; }
@@ -129,6 +134,7 @@ instruccion
   /* DECLARAR VARIABLES */
   |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
   |tipo_dato lista_id IGUAL expresion PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
+
   /* ERRORES */
   |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
@@ -181,6 +187,6 @@ lista_id
   |IDENTIFICADOR { $$ = [$1]; };
 
 expresion
-  :expresionCadena { $$ = $1;}
+  :expresion_cadena { $$ = $1;}
   |RTRUE { $$ = $1;}
   |RFALSE { $$ = $1;};
