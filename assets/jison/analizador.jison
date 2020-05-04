@@ -126,6 +126,7 @@ instruccion
   /* INSTRUCCIONES DE PRINT Y PRINTLN */
   :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
   |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
+
   /* DEFINICION DE CLASES */
   |RCLASS IDENTIFICADOR LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
   |RCLASS IDENTIFICADOR LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevaClase($2); }
@@ -141,17 +142,15 @@ instruccion
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
   |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
-  |llamada_funcion { $$ = $1; }
-  |expresion_numerica { $$ = $1; }
-  |IDENTIFICADOR { $$ = $1; };
+  |expresion_numerica { $$ = $1; };
 
 llamada_funcion
   :IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1,$3); }
   |IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstancia($1); };
 
 expresion_numerica
-  :expresion_numerica MAS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
-  |expresion_numerica MENOS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.RESTA); }
+  :/*expresion_numerica MAS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
+  |*/expresion_numerica MENOS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.RESTA); }
   |expresion_numerica MULTIPLICACION expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MULTIPLICACION); }
   |expresion_numerica DIVISION expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
   |expresion_numerica MODULO expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
