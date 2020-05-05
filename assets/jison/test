@@ -3,6 +3,8 @@ System.out.println(var()+"putamadre");
 import class2;
 import _clas3;
 
+System.out.print(5+"hola mundo");
+
 class clase1{
   System.out.println("hola");
 }
