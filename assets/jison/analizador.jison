@@ -134,7 +134,13 @@ instruccion
   /* DECLARAR VARIABLES */
   |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
   |tipo_dato lista_id IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
-
+  /* ASIGNACION DE VARIABLES */
+  |IDENTIFICADOR IGUAL expresion_cadena { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
+  /* SENTENCIA IF */
+|RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER lista_else_if RELSE LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$6,$11,$8); }
+  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$6,$8); }
+  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER RELSE LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoElse($3,$6,$10); }
+  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoIf($3,$6); }
   /* ERRORES */
   |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
@@ -173,7 +179,7 @@ expresion_numerica
 
 parametros
   :parametros COMA parametro { $1.push($3); $$ = $1; }
-  |parametro  { $$ = $1};
+  |parametro  { $$ = [$1]};
 
 parametro
   :IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
@@ -190,8 +196,8 @@ tipo_dato
   |RSTRING { $$ = $1; };
 
 lista_id
-  :lista_id COMA IDENTIFICADOR { $1.push(instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR));  $$ = $1; }
-  |IDENTIFICADOR { $$ = [instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR)]; };
+  :lista_id COMA IDENTIFICADOR { $1.push($3);  $$ = $1; }
+  |IDENTIFICADOR { $$ = [$1]; };
 
 valor_numerico
   :ENTERO { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.NUMERO); }
@@ -200,3 +206,22 @@ valor_numerico
 valor_booleano
   :RTRUE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); }
   |RFALSE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); };
+
+expresion_logica
+  :expresion_logica AND expresion_logica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.AND); }
+  |expresion_logica OR expresion_logica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.OR); }
+  |NOT expresion_logica { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NOT); }
+  |expresion_relacional { $$ = $1; };
+
+expresion_relacional
+  :expresion_relacional IGUALDAD expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
+  |expresion_relacional DISTINTO expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
+  |expresion_relacional MAYOR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
+  |expresion_relacional MENOR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_QUE); }
+  |expresion_relacional MAYORIGUAL expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_IGUAL); }
+  |expresion_relacional MENORIGUAL expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_IGUAL); }
+  |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
+  |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR); }
+  |valor_numerico { $$ = $1; }
+  |valor_booleano { $$ = $1; }
+  |llamada { $$ = $1; };

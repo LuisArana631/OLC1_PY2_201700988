@@ -4,6 +4,7 @@ exports.TIPO_VALOR = {
     NUMERO: 'VAL_NUMERO',
     IDENTIFICADOR: 'VAL_IDENTIFICADOR',
     CADENA: 'VAL_CADENA',
+    BOOLEAN: 'VAL_BOOLEANO'
 };
 exports.TIPO_OPERACION = {
     /*OPERACION ARITMETICA*/
@@ -17,6 +18,8 @@ exports.TIPO_OPERACION = {
     DECREMENTO: 'OP_DECREMENTO',
     NEGATIVO: 'OP_NEGATIVO',
     /* OPERACIONES RELACIONALES */
+    IGUALDAD: 'OP_IGUALDAD',
+    DISTINTO: 'OP_DISTINTO',
     MAYOR_QUE: 'OP_MAYOR_QUE',
     MENOR_QUE: 'OP_MENOR_QUE',
     MAYOR_IGUAL: 'OP_MAYOR_IGUAL',
@@ -44,6 +47,7 @@ exports.TIPO_INSTRUCCION = {
     PRINTLN: 'IN_PRINTLN',
     DECLARACION_VAR: 'IN_DECLARACION_VAR',
     DECLARACION_FUN: 'IN_DECLARACION_FUN',
+    ASIGNACION: 'IN_ASIGNACION',
 };
 exports.TIPO_TRANSFERENCIA = {
     BREAK: 'TR_BREAK',
@@ -73,6 +77,20 @@ function nuevaClase(id, instrucciones) {
     };
 }
 exports.instruccionesAPI = {
+    /* OBJ PARA BLOQUE DE SENTENCIAS */
+    nuevoBloqueSentencias: function (instrucciones) {
+        return {
+            instrucciones: instrucciones
+        };
+    },
+    /* OBJ PARA ASIGNACION DE VARIABLES */
+    nuevaAsignacion: function (identificador, valor) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.ASIGNACION,
+            identificador: identificador,
+            valor: valor
+        };
+    },
     /* OBJ PARA HACER IMPORTS */
     nuevoImport: function (identificador) {
         return {
@@ -187,13 +205,31 @@ exports.instruccionesAPI = {
             instruccionesFalse: instruccionesFalse
         };
     },
+    /* OBJ PARA LA LISTA DE ELSE IF */
+    nuevoIfListElseIf: function (expresionLogica, instrucciones, list_elseif) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.IF,
+            expresionLogica: expresionLogica,
+            instrucciones: instrucciones,
+            list_elseif: list_elseif
+        };
+    },
+    /* OBJ PARA LA LISTA DE ELSE IF CUANDO EXISTE UN ELSE */
+    nuevoIFElseListElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse, list_elseif) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.ELSE,
+            expresionLogica: expresionLogica,
+            instruccionesTrue: instruccionesTrue,
+            instruccionesFalse: instruccionesFalse,
+            list_elseif: list_elseif
+        };
+    },
     /* OBJ PARA LA INSTRUCCION ELSE IF */
-    nuevoElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse) {
+    nuevoElseIf: function (expresionLogica, instrucciones) {
         return {
             tipo: exports.TIPO_INSTRUCCION.ELSE_IF,
             expresionLogica: expresionLogica,
-            instruccionesTrue: instruccionesTrue,
-            instruccionesFalse: instruccionesFalse
+            instrucciones: instrucciones
         };
     },
     /* OBJ PARA LA INSTRUCCION SWITCH */

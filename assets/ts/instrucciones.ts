@@ -18,6 +18,8 @@ export const TIPO_OPERACION = {
   NEGATIVO: 'OP_NEGATIVO',
 
   /* OPERACIONES RELACIONALES */
+  IGUALDAD: 'OP_IGUALDAD',
+  DISTINTO: 'OP_DISTINTO',
   MAYOR_QUE: 'OP_MAYOR_QUE',
   MENOR_QUE: 'OP_MENOR_QUE',
   MAYOR_IGUAL: 'OP_MAYOR_IGUAL',
@@ -47,6 +49,7 @@ export const TIPO_INSTRUCCION = {
   PRINTLN: 'IN_PRINTLN',
   DECLARACION_VAR: 'IN_DECLARACION_VAR',
   DECLARACION_FUN: 'IN_DECLARACION_FUN',
+  ASIGNACION: 'IN_ASIGNACION',
 }
 
 export const TIPO_TRANSFERENCIA = {
@@ -81,6 +84,21 @@ function nuevaClase(id:any, instrucciones:any){
 }
 
 export const instruccionesAPI = {
+  /* OBJ PARA BLOQUE DE SENTENCIAS */
+  nuevoBloqueSentencias: function(instrucciones:any){
+    return{
+      instrucciones: instrucciones
+    }
+  },
+  /* OBJ PARA ASIGNACION DE VARIABLES */
+  nuevaAsignacion: function(identificador:any, valor:any){
+    return{
+      tipo: TIPO_INSTRUCCION.ASIGNACION,
+      identificador: identificador,
+      valor: valor
+    }
+  },
+
   /* OBJ PARA HACER IMPORTS */
   nuevoImport: function(identificador:any){
     return{
@@ -214,13 +232,33 @@ export const instruccionesAPI = {
     }
   },
 
+  /* OBJ PARA LA LISTA DE ELSE IF */
+  nuevoIfListElseIf: function(expresionLogica:any, instrucciones:any, list_elseif:any){
+    return{
+      tipo: TIPO_INSTRUCCION.IF,
+      expresionLogica: expresionLogica,
+      instrucciones: instrucciones,
+      list_elseif: list_elseif
+    }
+  },
+
+  /* OBJ PARA LA LISTA DE ELSE IF CUANDO EXISTE UN ELSE */
+  nuevoIfElseListElseIf: function(expresionLogica:any, instruccionesTrue:any, instruccionesFalse:any, list_elseif:any){
+    return{
+      tipo: TIPO_INSTRUCCION.ELSE,
+      expresionLogica: expresionLogica,
+      instruccionesTrue: instruccionesTrue,
+      instruccionesFalse: instruccionesFalse,
+      list_elseif: list_elseif
+    }
+  },
+
   /* OBJ PARA LA INSTRUCCION ELSE IF */
-  nuevoElseIf: function(expresionLogica:any, instruccionesTrue:any, instruccionesFalse:any){
+  nuevoElseIf: function(expresionLogica:any, instrucciones:any){
     return{
       tipo: TIPO_INSTRUCCION.ELSE_IF,
       expresionLogica: expresionLogica,
-      instruccionesTrue: instruccionesTrue,
-      instruccionesFalse: instruccionesFalse
+      instrucciones: instrucciones
     }
   },
 
