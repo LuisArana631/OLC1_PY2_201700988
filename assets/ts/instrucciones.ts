@@ -203,6 +203,14 @@ export const instruccionesAPI = {
     }
   },
 
+  nuevoDoWhile: function(expresionLogica:any, instrucciones:any){
+    return{
+      tipo: TIPO_INSTRUCCION.DO_WHILE,
+      expresionLogica: expresionLogica,
+      instrucciones: instrucciones
+    }
+  },
+
   /* OBJ PARA INSTRUCCION WHILE */
   nuevoWhile: function (expresionLogica:any, instrucciones:any) {
       return{
@@ -282,19 +290,22 @@ export const instruccionesAPI = {
     }
   },
 
-  /* OBJ DE LA LISTA DE CASES */
-  nuevoListCases: function(caso:any){
-    var casos = [];
-    casos.push(caso);
-    return casos;
-  },
-
   /* OBJ CASE PARA SWITCH */
-  nuevoCase: function(expresionNumerica:any, instrucciones:any){
+  nuevoCase: function(expresion:any, instrucciones:any){
     return{
       tipo: TIPO_TRANSFERENCIA.CASE,
-      expresionNumerica: expresionNumerica,
+      expresion: expresion,
       instrcciones: instrucciones
+    }
+  },
+
+  /* OBJ CASE PARA SWITCH CON VALOR DE TRANSFERENCIA */
+  nuevoCaseTransferencia: function(expresion:any, instrucciones:any, transferencia:any){
+    return{
+      tipo: TIPO_TRANSFERENCIA.CASE,
+      expresion: expresion,
+      instrucciones: instrucciones,
+      transferencia: transferencia
     }
   },
 
@@ -303,6 +314,15 @@ export const instruccionesAPI = {
     return {
       tipo: TIPO_TRANSFERENCIA.DEFAULT,
       instrucciones: instrucciones
+    }
+  },
+
+  /* OBJ DEFAULT PARA SWITCH CON VALOR DE TRANSFERENCIA */
+  nuevoDefaultTransferencia: function(instrucciones:any, transferencia:any){
+    return{
+      tipo: TIPO_TRANSFERENCIA.DEFAULT,
+      instrucciones: instrucciones,
+      transferencia: transferencia
     }
   },
 

@@ -18,10 +18,29 @@ boolean paso = true;
 class vacia{
 }
 
-if(true){
+if(x<5 && paso==true){
   System.out.println("if");
+}else if(x>5 && paso==false){
+  System.out.println("else if");
 }else{
   System.out.println("else");
+}
+
+while(x>5){
+  x = x - 1;
+}
+
+switch(x){
+  case 1:
+    if(paso){
+      System.out.println("Si hay paso");
+    }else{
+      System.out.println("No hay paso");
+    }
+    break;
+  default:
+    System.out.println("No es 1");
+    break;
 }
 
 double flotante = 13.5 + 5.5;

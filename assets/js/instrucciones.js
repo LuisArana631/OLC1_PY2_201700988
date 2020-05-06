@@ -178,6 +178,13 @@ exports.instruccionesAPI = {
             expresionCadena: expresionCadena
         };
     },
+    nuevoDoWhile: function (expresionLogica, instrucciones) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.DO_WHILE,
+            expresionLogica: expresionLogica,
+            instrucciones: instrucciones
+        };
+    },
     /* OBJ PARA INSTRUCCION WHILE */
     nuevoWhile: function (expresionLogica, instrucciones) {
         return {
@@ -249,18 +256,21 @@ exports.instruccionesAPI = {
             casos: casos
         };
     },
-    /* OBJ DE LA LISTA DE CASES */
-    nuevoListCases: function (caso) {
-        var casos = [];
-        casos.push(caso);
-        return casos;
-    },
     /* OBJ CASE PARA SWITCH */
-    nuevoCase: function (expresionNumerica, instrucciones) {
+    nuevoCase: function (expresion, instrucciones) {
         return {
             tipo: exports.TIPO_TRANSFERENCIA.CASE,
-            expresionNumerica: expresionNumerica,
+            expresion: expresion,
             instrcciones: instrucciones
+        };
+    },
+    /* OBJ CASE PARA SWITCH CON VALOR DE TRANSFERENCIA */
+    nuevoCaseTransferencia: function (expresion, instrucciones, transferencia) {
+        return {
+            tipo: exports.TIPO_TRANSFERENCIA.CASE,
+            expresion: expresion,
+            instrucciones: instrucciones,
+            transferencia: transferencia
         };
     },
     /* OBJ DEFAULT PARA SWITCH */
@@ -268,6 +278,14 @@ exports.instruccionesAPI = {
         return {
             tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
             instrucciones: instrucciones
+        };
+    },
+    /* OBJ DEFAULT PARA SWITCH CON VALOR DE TRANSFERENCIA */
+    nuevoDefaultTransferencia: function (instrucciones, transferencia) {
+        return {
+            tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
+            instrucciones: instrucciones,
+            transferencia: transferencia
         };
     },
     /* CREAR OBJ DE TIPO OPERADOR */

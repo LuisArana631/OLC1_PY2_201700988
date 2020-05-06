@@ -143,6 +143,12 @@ instruccion
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoIf($3,$5); }
   /* SENTENCIA SWITCH */
   |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
+  /* SENTENCIA WHILE */
+  |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
+  /* SENTENCIA DO WHILE */
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  /* SENTENCIA FOR */
+  
   /* ERRORES */
   |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
@@ -241,14 +247,15 @@ casos
   |caso_eval { $$ = [$1]; };
 
 caso_eval
-  :RCASE expresion_cadena DOSPTS instrucciones {  }
-  |RCASE expresion_cadena DOSPTS instrucciones valor_transferencia PTOCOMA {  }
-  |RDEFAULT DOSPTS instrucciones {  }
-  |RDEFAULT DOSPTS instrucciones valor_transferencia PTOCOMA {  };
+  :RCASE expresion_cadena DOSPTS instrucciones { $$ = instruccionesAPI.nuevoCase($2,$4); }
+  |RCASE expresion_cadena DOSPTS instrucciones valor_transferencia PTOCOMA { $$  = instruccionesAPI.nuevoCaseTransferencia($2,$4,$5); }
+  |RDEFAULT DOSPTS instrucciones { $$ = instruccionesAPI.nuevoDefault($3); }
+  |RDEFAULT DOSPTS instrucciones valor_transferencia PTOCOMA { $$ = instruccionesAPI.nuevoDefaultTransferencia($3,$4); };
 
 bloque_sentencias
-  :LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias($2); };
+  :LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias($2); }
+  |LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias(undefined) };
 
 lista_else_if
-  :lista_else_if RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias
-  |RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias;
+  :lista_else_if RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias { $1.push(instruccionesAPI.nuevoIf($5,$7)); $$ = $1; }
+  |RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = [instruccionesAPI.nuevoIf($4,$6)]; };
