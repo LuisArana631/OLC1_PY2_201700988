@@ -50,6 +50,7 @@ export const TIPO_INSTRUCCION = {
   DECLARACION_VAR: 'IN_DECLARACION_VAR',
   DECLARACION_FUN: 'IN_DECLARACION_FUN',
   ASIGNACION: 'IN_ASIGNACION',
+  BLOQUE_SENTENCIAS: 'IN_BLOQUE_SENTENCIAS',
 }
 
 export const TIPO_TRANSFERENCIA = {
@@ -84,12 +85,22 @@ function nuevaClase(id:any, instrucciones:any){
 }
 
 export const instruccionesAPI = {
+  /* OBJ PARA RETURN */
+  nuevoReturn: function(valor:any){
+    return{
+      tipo: TIPO_TRANSFERENCIA.RETURN,
+      valor: valor
+    }
+  },
+
   /* OBJ PARA BLOQUE DE SENTENCIAS */
   nuevoBloqueSentencias: function(instrucciones:any){
     return{
+      tipo: TIPO_INSTRUCCION.BLOQUE_SENTENCIAS,
       instrucciones: instrucciones
     }
   },
+
   /* OBJ PARA ASIGNACION DE VARIABLES */
   nuevaAsignacion: function(identificador:any, valor:any){
     return{

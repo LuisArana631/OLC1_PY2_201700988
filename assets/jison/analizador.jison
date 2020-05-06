@@ -137,10 +137,12 @@ instruccion
   /* ASIGNACION DE VARIABLES */
   |IDENTIFICADOR IGUAL expresion_cadena { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
   /* SENTENCIA IF */
-|RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER lista_else_if RELSE LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$6,$11,$8); }
-  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$6,$8); }
-  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER RELSE LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoElse($3,$6,$10); }
-  |RIF PARIZQ expresion_logica PARDER LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoIf($3,$6); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$5,$8,$6); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$5,$6); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoElse($3,$5,$7); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoIf($3,$5); }
+  /* SENTENCIA SWITCH */
+  |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
   /* ERRORES */
   |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
@@ -199,6 +201,11 @@ lista_id
   :lista_id COMA IDENTIFICADOR { $1.push($3);  $$ = $1; }
   |IDENTIFICADOR { $$ = [$1]; };
 
+valor_transferencia
+  :RBREAK { $$ = $1; }
+  |RRETURN expresionCadena { $$ = instruccionesAPI.nuevoReturn($2); }
+  |RCONTINUE { $$ = $1; };
+
 valor_numerico
   :ENTERO { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.NUMERO); }
   |DECIMAL { $$ = instruccionesAPI.nuevoValor(Number($1),TIPO_VALOR.NUMERO); };
@@ -207,21 +214,41 @@ valor_booleano
   :RTRUE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); }
   |RFALSE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); };
 
+expresion_relacional
+  :valores_expresion_relacional IGUALDAD valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
+  |valores_expresion_relacional DISTINTO valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
+  |valores_expresion_relacional MAYOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
+  |valores_expresion_relacional MENOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_QUE); }
+  |valores_expresion_relacional MAYORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_IGUAL); }
+  |valores_expresion_relacional MENORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_IGUAL); }
+  |valores_expresion_relacional { $$ = $1; };
+
+valores_expresion_relacional
+  :CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
+  |valor_booleano { $$ = $1; }
+  |expresion_numerica { $$ = $1; };
+
 expresion_logica
-  :expresion_logica AND expresion_logica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.AND); }
-  |expresion_logica OR expresion_logica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.OR); }
-  |NOT expresion_logica { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NOT); }
+  :expresion_logica AND expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.AND); }
+  |expresion_logica OR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.OR); }
+  |NOT PARIZQ expresion_logica AND expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.AND), TIPO_OPERACION.NOT); }
+  |NOT PARIZQ expresion_logica OR expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.OR), TIPO_OPERACION.NOT); }
+  |NOT expresion_relacional { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NOT); }
   |expresion_relacional { $$ = $1; };
 
-expresion_relacional
-  :expresion_relacional IGUALDAD expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
-  |expresion_relacional DISTINTO expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
-  |expresion_relacional MAYOR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
-  |expresion_relacional MENOR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_QUE); }
-  |expresion_relacional MAYORIGUAL expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_IGUAL); }
-  |expresion_relacional MENORIGUAL expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_IGUAL); }
-  |CADENA { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.CADENA); }
-  |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1, TIPO_VALOR.IDENTIFICADOR); }
-  |valor_numerico { $$ = $1; }
-  |valor_booleano { $$ = $1; }
-  |llamada { $$ = $1; };
+casos
+  :casos caso_eval { $1.push($2); $$ =$1; }
+  |caso_eval { $$ = [$1]; };
+
+caso_eval
+  :RCASE expresion_cadena DOSPTS instrucciones {  }
+  |RCASE expresion_cadena DOSPTS instrucciones valor_transferencia PTOCOMA {  }
+  |RDEFAULT DOSPTS instrucciones {  }
+  |RDEFAULT DOSPTS instrucciones valor_transferencia PTOCOMA {  };
+
+bloque_sentencias
+  :LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias($2); };
+
+lista_else_if
+  :lista_else_if RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias
+  |RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias;

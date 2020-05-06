@@ -48,6 +48,7 @@ exports.TIPO_INSTRUCCION = {
     DECLARACION_VAR: 'IN_DECLARACION_VAR',
     DECLARACION_FUN: 'IN_DECLARACION_FUN',
     ASIGNACION: 'IN_ASIGNACION',
+    BLOQUE_SENTENCIAS: 'IN_BLOQUE_SENTENCIAS',
 };
 exports.TIPO_TRANSFERENCIA = {
     BREAK: 'TR_BREAK',
@@ -77,9 +78,17 @@ function nuevaClase(id, instrucciones) {
     };
 }
 exports.instruccionesAPI = {
+    /* OBJ PARA RETURN */
+    nuevoReturn: function (valor) {
+        return {
+            tipo: exports.TIPO_TRANSFERENCIA.RETURN,
+            valor: valor
+        };
+    },
     /* OBJ PARA BLOQUE DE SENTENCIAS */
     nuevoBloqueSentencias: function (instrucciones) {
         return {
+            tipo: exports.TIPO_INSTRUCCION.BLOQUE_SENTENCIAS,
             instrucciones: instrucciones
         };
     },
@@ -215,7 +224,7 @@ exports.instruccionesAPI = {
         };
     },
     /* OBJ PARA LA LISTA DE ELSE IF CUANDO EXISTE UN ELSE */
-    nuevoIFElseListElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse, list_elseif) {
+    nuevoIfElseListElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse, list_elseif) {
         return {
             tipo: exports.TIPO_INSTRUCCION.ELSE,
             expresionLogica: expresionLogica,
