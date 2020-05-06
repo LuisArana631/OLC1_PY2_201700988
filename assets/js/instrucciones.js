@@ -287,15 +287,6 @@ exports.instruccionesAPI = {
             instrcciones: instrucciones
         };
     },
-    /* OBJ CASE PARA SWITCH CON VALOR DE TRANSFERENCIA */
-    nuevoCaseTransferencia: function (expresion, instrucciones, transferencia) {
-        return {
-            tipo: exports.TIPO_TRANSFERENCIA.CASE,
-            expresion: expresion,
-            instrucciones: instrucciones,
-            transferencia: transferencia
-        };
-    },
     /* OBJ DEFAULT PARA SWITCH */
     nuevoDefault: function (instrucciones) {
         return {

@@ -122,12 +122,40 @@ instrucciones
   :instrucciones instruccion  { $1.push($2); $$ = $1; }
   |instruccion  { $$ = [$1]; };
 
+sentencias
+  :sentencias sentencia { $1.push($2); $$ = $1; }
+  |sentencia { $$ = [$1]; };
+
+sentencia
+  :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
+  |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
+  |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
+  |tipo_dato lista_id IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
+  |IDENTIFICADOR IGUAL expresion_cadena { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$5,$8,$6); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$5,$6); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoElse($3,$5,$7); }
+  |RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoIf($3,$5); }
+  |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
+  |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |RVOID IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  |tipo_dato IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  |incremento_decremento PTOCOMA { $$ = $1; }
+  |valor_transferencia PTOCOMA { $$ = $1; };
+
 instruccion
   /* INSTRUCCIONES DE PRINT Y PRINTLN */
   :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
   |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
   /* DEFINICION DE CLASES */
-  |RCLASS IDENTIFICADOR LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
+  |RCLASS IDENTIFICADOR LLAVIZQ sentencias LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
   |RCLASS IDENTIFICADOR LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevaClase($2); }
   /* IMPORTAR CLASES */
   |RIMPORT IDENTIFICADOR PTOCOMA { $$ = instruccionesAPI.nuevoImport($2); }
@@ -260,13 +288,11 @@ casos
   |caso_eval { $$ = [$1]; };
 
 caso_eval
-  :RCASE expresion_cadena DOSPTS instrucciones { $$ = instruccionesAPI.nuevoCase($2,$4); }
-  |RCASE expresion_cadena DOSPTS instrucciones valor_transferencia PTOCOMA { $$  = instruccionesAPI.nuevoCaseTransferencia($2,$4,$5); }
-  |RDEFAULT DOSPTS instrucciones { $$ = instruccionesAPI.nuevoDefault($3); }
-  |RDEFAULT DOSPTS instrucciones valor_transferencia PTOCOMA { $$ = instruccionesAPI.nuevoDefaultTransferencia($3,$4); };
+  :RCASE expresion_cadena DOSPTS sentencias { $$ = instruccionesAPI.nuevoCase($2,$4); }
+  |RDEFAULT DOSPTS sentencias { $$ = instruccionesAPI.nuevoDefault($3); };
 
 bloque_sentencias
-  :LLAVIZQ instrucciones LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias($2); }
+  :LLAVIZQ sentencias LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias($2); }
   |LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevoBloqueSentencias(undefined) };
 
 lista_else_if
