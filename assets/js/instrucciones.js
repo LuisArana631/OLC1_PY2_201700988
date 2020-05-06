@@ -121,6 +121,13 @@ exports.instruccionesAPI = {
             parametro: parametro
         };
     },
+    /* OBJ PARAMETRO DE FUNCION */
+    nuevoParametroFun: function (tipo, parametro) {
+        return {
+            tipo: tipo,
+            parametro: parametro
+        };
+    },
     /* OBJ PARA CREAR INSTANCIA VACIA */
     nuevaInstancia: function (id, parametros) {
         return nuevaLlamadaFuncion(id, parametros);
@@ -145,7 +152,23 @@ exports.instruccionesAPI = {
         return nuevaOperacion(operandoIzq, operandoDer, tipo);
     },
     /* OBJ PARA DECLARACION DE FUNCIONES */
-    nuevaDeclaracionFun: function () {
+    nuevaDeclaracionFun: function (tipoFun, identificador, instrucciones) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
+            tipoFun: tipoFun,
+            identificador: identificador,
+            instrucciones: instrucciones
+        };
+    },
+    /* OBJ PARA DECLARACION DE FUNCIONES */
+    nuevaDeclaracionFunParametros: function (tipoFun, identificador, parametros, instrucciones) {
+        return {
+            tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
+            tipoFun: tipoFun,
+            identificador: identificador,
+            parametros: parametros,
+            instrucciones: instrucciones
+        };
     },
     /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
     nuevoDeclaracionVarValor: function (identificadores, tipo, valor) {
@@ -199,9 +222,9 @@ exports.instruccionesAPI = {
             tipo: exports.TIPO_INSTRUCCION.FOR,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones,
-            aod: aod,
+            aumentodecremento: aod,
             variable: variable,
-            val: val
+            valor: val
         };
     },
     /* OBJ PARA INSTRUCCION IF */

@@ -26,8 +26,8 @@ if(x<5 && paso==true){
   System.out.println("else");
 }
 
-while(x>5){
-  x = x - 1;
+while(x>=5){
+  x--;
 }
 
 switch(x){

@@ -24,22 +24,22 @@
 "\\\"" return 'COMILLADOBLE';
 
 /* OPERACIONES ARITMETICAS*/
+"++" return 'INCREMENTO';
+"--" return 'DECREMENTO';
 "+" return 'MAS';
 "-" return 'MENOS';
 "*" return 'MULTIPLICACION';
 "/" return 'DIVISION';
 "^" return 'POTENCIA';
 "%" return 'MODULO';
-"++" return 'INCREMENTO';
-"--" return 'DECREMENTO';
 
 /* OPERACIONES RELACIONALES */
 "==" return 'IGUALDAD';
 "!=" return 'DISTINTO';
-">" return 'MAYOR';
 ">="  return 'MAYORIGUAL';
-"<" return 'MENOR';
+">" return 'MAYOR';
 "<=" return 'MENORIGUAL';
+"<" return 'MENOR';
 
 /* OPREACIONES LOGICAS */
 "&&" return 'AND';
@@ -148,7 +148,17 @@ instruccion
   /* SENTENCIA DO WHILE */
   |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
   /* SENTENCIA FOR */
-  
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  /* DECLARACION DE FUNCIONES */
+  |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |RVOID IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  |tipo_dato IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  /* INCREMENTO Y DECREMENTO */
+  |incremento_decremento PTOCOMA { $$ = $1; }
   /* ERRORES */
   |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
 
@@ -164,6 +174,7 @@ aux_expresion_cadena
   |aux_expresion_cadena DIVISION aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
   |aux_expresion_cadena MODULO aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
   |aux_expresion_cadena POTENCIA aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |incremento_decremento { $$ = $1; }
   |PARIZQ aux_expresion_cadena PARDER { $$ = $2; }
   |valor_numerico { $$ = $1; }
   |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
@@ -181,6 +192,8 @@ expresion_numerica
   |expresion_numerica MODULO expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
   |expresion_numerica POTENCIA expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
   |PARIZQ expresion_numerica PARDER { $$ = $2; }
+  |MENOS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NEGATIVO); }
+  |incremento_decremento { $$ = $1; }
   |valor_numerico { $$ = $1; }
   |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
   |llamada { $$ = $1; };
@@ -259,3 +272,11 @@ bloque_sentencias
 lista_else_if
   :lista_else_if RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias { $1.push(instruccionesAPI.nuevoIf($5,$7)); $$ = $1; }
   |RELSE RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = [instruccionesAPI.nuevoIf($4,$6)]; };
+
+incremento_decremento
+  :IDENTIFICADOR INCREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.INCREMENTO); }
+  |IDENTIFICADOR DECREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.DECREMENTO); };
+
+parametros_fun
+  :parametros_fun COMA tipo_dato IDENTIFICADOR { $1.push(instruccionesAPI.nuevoParametroFun($3,$4)); $$ = $1 }
+  |tipo_dato IDENTIFICADOR { $$ = [instruccionesAPI.nuevoParametroFun($1,$2)]; };

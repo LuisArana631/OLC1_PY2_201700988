@@ -135,6 +135,14 @@ export const instruccionesAPI = {
     }
   },
 
+  /* OBJ PARAMETRO DE FUNCION */
+  nuevoParametroFun: function(tipo:any,parametro:any){
+    return{
+      tipo: tipo,
+      parametro: parametro
+    }
+  },
+
   /* OBJ PARA CREAR INSTANCIA VACIA */
   nuevaInstancia: function(id:any, parametros:any){
     return nuevaLlamadaFuncion(id,parametros);
@@ -164,8 +172,24 @@ export const instruccionesAPI = {
   },
 
   /* OBJ PARA DECLARACION DE FUNCIONES */
-  nuevaDeclaracionFun: function (){
+  nuevaDeclaracionFun: function (tipoFun:any, identificador:any, instrucciones:any){
+    return{
+      tipo: TIPO_INSTRUCCION.DECLARACION_FUN,
+      tipoFun: tipoFun,
+      identificador: identificador,
+      instrucciones: instrucciones
+    }
+  },
 
+  /* OBJ PARA DECLARACION DE FUNCIONES */
+  nuevaDeclaracionFunParametros: function (tipoFun:any, identificador:any, parametros:any, instrucciones:any){
+    return{
+      tipo: TIPO_INSTRUCCION.DECLARACION_FUN,
+      tipoFun: tipoFun,
+      identificador: identificador,
+      parametros: parametros,
+      instrucciones: instrucciones
+    }
   },
 
   /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
@@ -226,9 +250,9 @@ export const instruccionesAPI = {
       tipo: TIPO_INSTRUCCION.FOR,
       expresionLogica: expresionLogica,
       instrucciones: instrucciones,
-      aod: aod,
+      aumentodecremento: aod,
       variable: variable,
-      val: val
+      valor: val
     }
   },
 
