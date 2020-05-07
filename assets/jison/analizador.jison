@@ -96,7 +96,8 @@
 
 <<EOF>> return 'EOF';
 
-. {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+. {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+    cErrores.errores.addError(new cNodoError.nodoError("Lexico", "Caracter desconocido: "+yytext,yylineno));}
 
 /lex
 
@@ -104,6 +105,8 @@
   const TIPO_VALOR = require('../js/instrucciones').TIPO_VALOR;
   const TIPO_OPERACION = require('../js/instrucciones').TIPO_OPERACION;
   const instruccionesAPI = require('../js/instrucciones').instruccionesAPI;
+  const cErrores = require ('../js/errores').errores;
+  const cNodoError = require ('../js/nodoError').nodoError;
 %}
 
 /* ASOCIACION Y PRECEDENCIA */
@@ -188,7 +191,8 @@ instruccion
   /* INCREMENTO Y DECREMENTO */
   |incremento_decremento PTOCOMA { $$ = $1; }
   /* ERRORES */
-  |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); };
+  |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
+            cErrores.errores.addError(new cNodoError.nodoError("Sintactico", "No se esperaba el caracter: "+yytext,yylineno)); };
 
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }

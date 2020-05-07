@@ -61,7 +61,8 @@ function index(pestanas, pestana) {
             lineNumbers: true,
             value: text_actual.value,
             theme: "darcula",
-            mode: "text/x-java"
+            mode: "text/x-java",
+            indentWithTabs: true
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
@@ -99,7 +100,8 @@ function add() {
         lineNumbers: true,
         value: tact.value,
         theme: "darcula",
-        mode: "text/x-java"
+        mode: "text/x-java",
+        indentWithTabs: true
     }).on('change', editor => {
         tact.value = editor.getValue();
     });
@@ -133,7 +135,8 @@ function openFile(files) {
             lineNumbers: true,
             value: text_actual.value,
             theme: "darcula",
-            mode: "text/x-java"
+            mode: "text/x-java",
+            indentWithTabs: true
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
