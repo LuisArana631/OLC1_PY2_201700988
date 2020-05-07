@@ -186,3 +186,21 @@ class pestana_class {
         return this.nombre;
     }
 }
+
+// End points de go para conectar con express
+function Conn() {
+    alert("Hola");
+    var texto = document.getElementById(get_pest()).value;
+    alert(texto);
+    var url = "http://localhost:3000/analizar/";
+    $.post(url, { text: texto }, function (data, status) {
+        if (status.toString() == 'success') {
+            alert("El resultado es " + data.toString());
+        }
+        else {
+            alert("Error estado de conexion" + status);
+        }
+    });
+}
+let evaluarButton = document.getElementById('btn-evaluar');
+evaluarButton.addEventListener('click', Conn, false);
