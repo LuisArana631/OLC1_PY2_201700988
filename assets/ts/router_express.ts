@@ -4,13 +4,11 @@ import { errores } from './errores';
 const router = Router();
 
 router.post('/analizar/', (req:Request,res:Response) => {
+    console.log("Conectado");
     var entrada = req.body.text;
     var resultado = parser(entrada);
-     errores.clear();
-    res.json({
-        ok:true,
-        mensaje: 'Todo bien!'
-    });
+    errores.clear();
+    res.send(resultado.toString());
 });
 
 function parser(texto:string){

@@ -30,12 +30,6 @@ function index(pestanas, pestana) {
     var list_pestanas = document.getElementById(pestanas);
     var cont_pestana = document.getElementById('c' + pestana);
     var list_cont = document.getElementById('contenido' + pestanas);
-    console.log("pestana:" + pestana);
-    console.log("pestanas:" + pestanas);
-    console.log(pestana1);
-    console.log(list_pestanas);
-    console.log(cont_pestana);
-    console.log(list_cont);
     var i = 0;
     while (typeof list_cont.getElementsByTagName('div')[i] != 'undefined') {
         $(document).ready(function () {
@@ -186,12 +180,9 @@ class pestana_class {
         return this.nombre;
     }
 }
-
 // End points de go para conectar con express
 function Conn() {
-    alert("Hola");
     var texto = document.getElementById(get_pest()).value;
-    alert(texto);
     var url = "http://localhost:3000/analizar/";
     $.post(url, { text: texto }, function (data, status) {
         if (status.toString() == 'success') {

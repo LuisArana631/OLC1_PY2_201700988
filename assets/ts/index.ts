@@ -37,13 +37,6 @@ function index(pestanas:string, pestana:string){
     var cont_pestana:HTMLElement = <HTMLElement> document.getElementById('c'+pestana);
     var list_cont:HTMLElement = <HTMLElement> document.getElementById('contenido'+pestanas);
 
-    console.log("pestana:" + pestana);
-    console.log("pestanas:" +pestanas);
-    console.log(pestana1);
-    console.log(list_pestanas);
-    console.log(cont_pestana);
-    console.log(list_cont)
-
     var i=0;
     while(typeof list_cont.getElementsByTagName('div')[i] != 'undefined'){
         $(document).ready(function(){
@@ -232,10 +225,8 @@ class pestana_class{
 }
 
 // End points de go para conectar con express
-function Conn(){
-    alert("Hola");
-    var texto:string = (<HTMLTextAreaElement> document.getElementById(get_pest())).value;    
-    alert(texto);
+function Conn(){    
+    var texto:string = (<HTMLTextAreaElement> document.getElementById(get_pest())).value;        
 
     var url:string = "http://localhost:3000/analizar/";
 

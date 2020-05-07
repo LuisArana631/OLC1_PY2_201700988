@@ -1,4 +1,6 @@
 import express = require('express');
+import cors = require('cors');
+import bodyParser = require('body-parser');
 
 export default class Server{
   public app:express.Application;
@@ -7,6 +9,10 @@ export default class Server{
   constructor(puerto:number){
     this.port = puerto;
     this.app = express();
+
+    this.app.use(bodyParser.json());
+    this.app.use(cors());
+    this.app.use(bodyParser.urlencoded({extended:true}));
   }
 
   static init (puerto:number){
@@ -14,7 +20,7 @@ export default class Server{
   }
 
   start(callback: Function){
-    this.app.listen(this.port, callback());
+    this.app.listen(this.port, callback());    
   }
 
 }
