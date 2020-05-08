@@ -170,8 +170,7 @@ function openFile(files:FileList){
     var a:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea", "a"));
     a.textContent = file.name;
     insert_pest(get_pest(),file.name);
-
-    var file_input = document.getElementById("fileInput");
+   
     (<HTMLTextAreaElement> document.getElementById('fileInput')).value = "";
 }
 
@@ -179,11 +178,11 @@ function downloadFile(){
     var ta:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest());
     var contenido = ta.value;
 
-    var title:HTMLTextAreaElement = <HTMLTextAreaElement> document.getElementById(get_pest().replace("textarea","a"));
-    var nombre = title.value;
+    var title:HTMLElement = <HTMLElement> document.getElementById(get_pest().replace("textarea", "a"));
+    var nombre:string = <string> title.textContent;
 
-    if(nombre === 'undefined'){
-        nombre = 'untitled.java'
+    if (nombre.includes("pestana")){
+        nombre = nombre + ".java";
     }
 
     var file = new Blob([contenido], {type: 'text/plain'});

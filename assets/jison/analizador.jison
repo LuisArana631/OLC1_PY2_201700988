@@ -305,7 +305,9 @@ lista_else_if
 
 incremento_decremento
   :IDENTIFICADOR INCREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.INCREMENTO); }
-  |IDENTIFICADOR DECREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.DECREMENTO); };
+  |IDENTIFICADOR DECREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.DECREMENTO); }
+  |ENTERO INCREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.INCREMENTO); }
+  |ENTERO DECREMENTO { $$ = instruccionesAPI.nuevaOperacionUnaria($1,TIPO_OPERACION.DECREMENTO); };
 
 parametros_fun
   :parametros_fun COMA tipo_dato IDENTIFICADOR { $1.push(instruccionesAPI.nuevoParametroFun($3,$4)); $$ = $1 }
