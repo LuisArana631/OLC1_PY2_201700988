@@ -96,8 +96,7 @@
 
 <<EOF>> return 'EOF';
 
-. {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);
-    cErrores.errores.addError(new cNodoError.nodoError("Lexico", "Caracter desconocido: "+yytext,yylineno));}
+. {console.error('Este es un error léxico: \"' + yytext + '\", en la linea: '+ yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 
 /lex
 
@@ -191,8 +190,7 @@ instruccion
   /* INCREMENTO Y DECREMENTO */
   |incremento_decremento PTOCOMA { $$ = $1; }
   /* ERRORES */
-  |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
-            cErrores.errores.addError(new cNodoError.nodoError("Sintactico", "No se esperaba el caracter: "+yytext,yylineno)); };
+  |error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column)};
 
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }

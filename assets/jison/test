@@ -3,7 +3,9 @@ System.out.println(var()+"putamadre");
 import class2;
 import _clas3;
 
-System.out.print(5+"hola mundo");
+String car = "%%% perros y perras 10 ";
+
+System.out.print(5+"hola mundo && perras");
 
 class clase1{
   System.out.println("hola");
