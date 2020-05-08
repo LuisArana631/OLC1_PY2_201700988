@@ -150,8 +150,7 @@ case 32:
  this.$ = instruccionesAPI.nuevoImport($$[$0-1]); 
 break;
 case 52:
- console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column);
-            cErrores.errores.addError(new cNodoError.nodoError("Sintactico", "No se esperaba el caracter: "+yytext,yylineno)); 
+ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column)
 break;
 case 53: case 69:
  this.$ = instruccionesAPI.nuevaOperacionBinaria($$[$0-2],$$[$0],TIPO_OPERACION.SUMA); 
@@ -1000,7 +999,6 @@ break;
 case 68:return 5;
 break;
 case 69:console.error('Este es un error léxico: \"' + yy_.yytext + '\", en la linea: '+ yy_.yylloc.first_line + ', en la columna: ' + yy_.yylloc.first_column);
-    cErrores.errores.addError(new cNodoError.nodoError("Lexico", "Caracter desconocido: "+yy_.yytext,yy_.yylineno));
 break;
 }
 },
