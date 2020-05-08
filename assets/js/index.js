@@ -3,19 +3,24 @@
 var count = 0;
 var pest_focus = "pestana1";
 var list_pest = new Array;
+
 function get_count() {
     return count++;
 }
+
 function get_pest() {
     return pest_focus;
 }
+
 function set_pest(pest_actual) {
     pest_focus = pest_actual;
 }
+
 function insert_pest(pestana, nombre) {
     var new_pest = new pestana_class(pestana, nombre);
     list_pest.push(new_pest);
 }
+
 function delete_pest(pestana) {
     for (var i = 0; i < list_pest.length; i++) {
         if (list_pest[i].Pestana_id == pestana) {
@@ -23,6 +28,7 @@ function delete_pest(pestana) {
         }
     }
 }
+
 function index(pestanas, pestana) {
     var id = pestana.replace('pestana', '');
     set_pest('textarea' + id);
@@ -32,14 +38,14 @@ function index(pestanas, pestana) {
     var list_cont = document.getElementById('contenido' + pestanas);
     var i = 0;
     while (typeof list_cont.getElementsByTagName('div')[i] != 'undefined') {
-        $(document).ready(function () {
+        $(document).ready(function() {
             $(list_cont.getElementsByTagName('div')[i]).css('display', 'none');
             $(list_pestanas.getElementsByTagName('li')[i]).css('background', '');
             $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom', '');
         });
         i += 1;
     }
-    $(document).ready(function () {
+    $(document).ready(function() {
         $(cont_pestana).css('display', '');
         $(pestana1).css('background', 'dimgray');
         $(pestana1).css('padding-bottom', '2px');
@@ -60,10 +66,9 @@ function index(pestanas, pestana) {
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
-    }
-    catch (error) {
-    }
+    } catch (error) {}
 }
+
 function add() {
     var num = get_count();
     var lu = document.getElementById("lista");
@@ -102,21 +107,22 @@ function add() {
 }
 let addButton = document.getElementById('btn-add');
 addButton.addEventListener('click', add, false);
+
 function quit() {
     try {
         var lu = document.getElementById("lista");
         lu.removeChild(document.getElementById(get_pest().replace("textarea", "pestana")));
         var contenido = document.getElementById("contenidopestanas");
         contenido.removeChild(document.getElementById(get_pest().replace("textarea", "cpestana")));
-    }
-    catch (error) { }
+    } catch (error) {}
 }
 let deleteButton = document.getElementById('btn-delete');
 deleteButton.addEventListener('click', quit, false);
+
 function openFile(files) {
     var file = files[0];
     var reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = function(e) {
         var _a;
         var actual = document.getElementById(get_pest().replace("textarea", "cpestana"));
         var text_actual = document.getElementById(get_pest());
@@ -142,6 +148,7 @@ function openFile(files) {
     var file_input = document.getElementById("fileInput");
     document.getElementById('fileInput').value = "";
 }
+
 function downloadFile() {
     var ta = document.getElementById(get_pest());
     var contenido = ta.value;
@@ -153,14 +160,14 @@ function downloadFile() {
     var file = new Blob([contenido], { type: 'text/plain' });
     if (window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveOrOpenBlob(file, nombre);
-    }
-    else {
-        var a = document.createElement("a"), url = URL.createObjectURL(file);
+    } else {
+        var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
         a.href = url;
         a.download = nombre;
         document.body.appendChild(a);
         a.click();
-        setTimeout(function () {
+        setTimeout(function() {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }, 0);
@@ -184,11 +191,10 @@ class pestana_class {
 function Conn() {
     var texto = document.getElementById(get_pest()).value;
     var url = "http://localhost:3000/analizar/";
-    $.post(url, { text: texto }, function (data, status) {
+    $.post(url, { text: texto }, function(data, status) {
         if (status.toString() == 'success') {
             alert("El resultado es " + data.toString());
-        }
-        else {
+        } else {
             alert("Error estado de conexion" + status);
         }
     });

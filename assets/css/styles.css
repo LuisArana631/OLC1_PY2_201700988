@@ -17,10 +17,10 @@
     float: left;
     text-align: center;
     margin: 0px 2px -2px -0px;
-    background: rgb(136, 9, 13);
+    background: #01438a;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    border: 2px solid rgb(192, 11, 16);
+    border: 2px solid #007bff;
     border-bottom: dimgray;
     padding: 0px 20px 0px 20px;
 }
@@ -36,7 +36,7 @@
     padding: 20px 0px 20px 20px;
     border-radius: 5px;
     border-top-left-radius: 0px;
-    border: 2px solid rgb(192, 11, 16);
+    border: 2px solid #007bff;
 }
 
 #pestanascon {
@@ -57,7 +57,7 @@
     background: #22556e;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    border: 2px solid rgb(192, 11, 16);
+    border: 2px solid #007bff;
     border-bottom: dimgray;
     padding: 0px 20px 0px 20px;
 }
@@ -73,5 +73,5 @@
     padding: 20px 0px 20px 20px;
     border-radius: 5px;
     border-top-left-radius: 0px;
-    border: 2px solid rgb(192, 11, 16);
+    border: 2px solid #007bff;
 }
