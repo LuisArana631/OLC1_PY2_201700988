@@ -182,13 +182,41 @@ class pestana_class {
 // End points de go para conectar con express
 function Conn() {
     var texto = document.getElementById(get_pest()).value;
-    var url = "http://localhost:3000/analizar/";
-    $.post(url, { text: texto }, function (data, status) {
+    var urlAnalizar = "http://localhost:3000/analizar/";
+    var urlErrores = "http://localhost:3000/errores/";
+    $.post(urlAnalizar, { text: texto }, function (data, status) {
         if (status.toString() == 'success') {
-            alert("El resultado es " + data.toString());
+            console.log(data);
         }
         else {
-            alert("Error estado de conexion" + status);
+            alert("Error estado de conexion " + status);
+        }
+    });
+    $.get(urlErrores, function (data, status) {
+        if (status.toString() == 'success') {
+            /* PINTAR LA TABLA CON LOS ERRORES */
+            let conteo = 1;
+            let table = document.getElementById('tablaErrores');
+            if (table) {
+                data.forEach(error => {
+                    let newRow = table.insertRow(table.rows.length);
+                    let no = newRow.insertCell(0);
+                    let tipo = newRow.insertCell(1);
+                    let er = newRow.insertCell(2);
+                    let linea = newRow.insertCell(3);
+                    let descripcion = newRow.insertCell(4);
+                    no.innerHTML = conteo.toString();
+                    tipo.innerHTML = error.tipo;
+                    er.innerHTML = error.valor;
+                    linea.innerHTML = error.linea.toString();
+                    descripcion.innerHTML = error.descripcion;
+                    conteo++;
+                });
+            }
+            console.log(data);
+        }
+        else {
+            alert("Error estado de conexion " + status);
         }
     });
 }

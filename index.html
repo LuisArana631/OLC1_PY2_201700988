@@ -48,7 +48,7 @@
                     <li class="nav-item" role="presentation"></li>
                     <li class="nav-item" role="presentation"></li>
                 </ul><span class="navbar-text actions"> </span>
-                <button class="btn btn-primary border-white" type="button" id="btn-open" style="background-color: #007bff;"><input type="file" onchange="openFile(this.files)"></button>
+                <button class="btn btn-primary border-white" type="button" id="btn-open" style="background-color: #007bff;"><input type="file" id="fileInput" onchange="openFile(this.files)"></button>
                 <button class="btn btn-primary border-white" type="button" id="btn-evaluar" style="background-color: #007bff;height: 44px;">Evaluar</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-add" type="button" style="background-color: #007bff;height: 44px;">Nueva Pestaña</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-delete" type="button" style="background-color: #007bff;height: 44px;">Quitar Pestaña</button>
@@ -87,14 +87,14 @@
             <div id="myTab1Content" class="tab-content">
                 <div id="home1" role="tabpanel" aria-labelledby="home-tab" class="tab-pane fade px-4 py-5 show active">
                     <div class="table-responsive rounded bg-dark">
-                        <table class="table" style="color:white;">
+                        <table class="table" id="tablaErrores" style="color:white;">
                             <thead>
                                 <tr>
                                     <th style="width:10%">No.</th>
                                     <th style="width:20%">Tipo Error</th>
-                                    <th style="width:30%">Error</th>
+                                    <th style="width:25%">Error</th>
                                     <th style="width:10%">Linea</th>
-                                    <th style="width:30%">Descripción</th>
+                                    <th style="width:35%">Descripción</th>
                                 </tr>
                             </thead>
                             <tbody>

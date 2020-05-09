@@ -1,6 +1,6 @@
 import { nodoError } from './nodoError';
 
-export class errores extends Array<nodoError>{
+class errores extends Array<nodoError>{
     constructor(){
         super();
     }
@@ -14,4 +14,16 @@ export class errores extends Array<nodoError>{
             this.prototype.pop();
         }
     }
+
+    public static getErrores():Array<nodoError>{
+        var aux:Array<nodoError> = new Array;
+
+        this.prototype.forEach(er => {            
+            aux.push(er);
+        });
+
+        return aux;
+    }
 }
+
+export {errores};

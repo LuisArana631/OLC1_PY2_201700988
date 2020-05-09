@@ -12,5 +12,12 @@ class errores extends Array {
             this.prototype.pop();
         }
     }
+    static getErrores() {
+        var aux = new Array;
+        this.prototype.forEach(er => {
+            aux.push(er);
+        });
+        return aux;
+    }
 }
 exports.errores = errores;
