@@ -1,10 +1,10 @@
 import { Router,Request,Response } from 'express';
 import { errores } from './errores';
+import * as analizador from '../jison/analizador';
 
 const router = Router();
 
 router.post('/analizar/', (req:Request,res:Response) => {
-    console.log("Conectado");
     var entrada = req.body.text;
     var resultado = parser(entrada);
     errores.clear();
@@ -13,7 +13,7 @@ router.post('/analizar/', (req:Request,res:Response) => {
 
 function parser(texto:string){
     try{
-        return "Listo";
+        return analizador.parse(texto);
     }catch (er){
         return "Error en compilacion de entrada: " + er.toString(); 
     }
