@@ -130,7 +130,7 @@ function openFile(files) {
             value: text_actual.value,
             theme: "darcula",
             mode: "text/x-java",
-            indentWithTabs: true
+            indentWithTabs: true,
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
@@ -197,6 +197,12 @@ function Conn() {
             /* PINTAR LA TABLA CON LOS ERRORES */
             let conteo = 1;
             let table = document.getElementById('tablaErrores');
+            var i = table.rows.length;
+            console.log(i);
+            while (i > 1) {
+                i--;
+                table.deleteRow(i);
+            }
             if (table) {
                 data.forEach(error => {
                     let newRow = table.insertRow(table.rows.length);

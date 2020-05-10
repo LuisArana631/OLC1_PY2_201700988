@@ -159,7 +159,7 @@ function openFile(files:FileList){
             value: text_actual.value,
             theme: "darcula",
             mode: "text/x-java",
-            indentWithTabs: true            
+            indentWithTabs: true,                   
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
@@ -243,7 +243,15 @@ function Conn(){
         if(status.toString() == 'success'){
             /* PINTAR LA TABLA CON LOS ERRORES */           
             let conteo:number = 1;
-            let table:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaErrores');
+            let table:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaErrores');            
+            
+            var i = table.rows.length;
+            console.log(i);
+            
+            while(i>1){
+                i--
+                table.deleteRow(i);                
+            }
 
             if(table){
                 data.forEach(error => {
