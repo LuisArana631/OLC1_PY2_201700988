@@ -190,7 +190,7 @@ instruccion
   /* INCREMENTO Y DECREMENTO */
   |incremento_decremento PTOCOMA { $$ = $1; }
   /* ERRORES */
-  |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+yytext,this._$.first_line,yytext)); };
+  |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$1,this._$.first_line,$1)); };
 
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }

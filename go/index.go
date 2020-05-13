@@ -20,6 +20,8 @@ func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets/"))))
 	//codemirror
 	http.Handle("/codemirror-5.53.2/", http.StripPrefix("/codemirror-5.53.2/", http.FileServer(http.Dir("../codemirror-5.53.2/"))))
+	//dist
+	http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("../dist/"))))
 
 	http.HandleFunc("/", index)
 

@@ -150,7 +150,7 @@ case 32:
  this.$ = instruccionesAPI.nuevoImport($$[$0-1]); 
 break;
 case 52:
- cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+yytext,this._$.first_line,yytext)); 
+ cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$$[$0],this._$.first_line,$$[$0])); 
 break;
 case 53: case 69:
  this.$ = instruccionesAPI.nuevaOperacionBinaria($$[$0-2],$$[$0],TIPO_OPERACION.SUMA); 

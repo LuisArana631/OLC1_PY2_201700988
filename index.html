@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -34,6 +34,8 @@
     <link rel="stylesheet" href="assets/css/Minimal-tabs.css">
     <link rel="stylesheet" href="assets/css/Bootstrap-DataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="dist/themes/default/style.min.css">
 
     <link rel="stylesheet" href="codemirror-5.53.2/theme/darcula.css">
     <link rel="stylesheet" href="codemirror-5.53.2/lib/codemirror.css">
@@ -105,6 +107,57 @@
                 </div>
                 <div id="profile1" role="tabpanel" aria-labelledby="profile-tab" class="tab-pane fade px-4 py-5">
 
+                    <div id="html" class="demo" style="color:white;">
+                        <ul>
+                            <li data-jstree='{ "opened" : true }'>Raiz
+                                <ul>
+                                    <li data-jstree='{ "opened" : true }'>Lista Espresion
+                                        <ul>
+                                            <li data-jstree='{ "opened" : true }'>Expresion
+                                                <ul>
+                                                    <li data-jstree='{ "opened" : true }'>Aritmetica
+                                                        <ul>
+                                                            <li>Primitivo</li>
+                                                            <li>Primitivo</li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <ul>
+                                    <li data-jstree='{ "opened" : true }'>Lista Instruccion
+                                        <ul>
+                                            <li data-jstree='{ "opened" : true }'>Instruccion
+                                                <ul>
+                                                    <li data-jstree='{ "opened" : true }'>Imprimir
+                                                        <ul>
+                                                            <li data-jstree='{ "opened" : true }'>Lista Espresion
+                                                                <ul>
+                                                                    <li data-jstree='{ "opened" : true }'>Expresion
+                                                                        <ul>
+                                                                            <li data-jstree='{ "opened" : true }'>Aritmetica
+                                                                                <ul>
+                                                                                    <li>Primitivo</li>
+                                                                                    <li>Primitivo</li>
+                                                                                </ul>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
                 <div id="contact1" role="tabpanel" aria-labelledby="contact-tab" class="tab-pane fade px-4 py-5">
 
@@ -152,6 +205,16 @@
     <script src="codemirror-5.53.2/lib/codemirror.js"></script>
     <script src="codemirror-5.53.2/mode/clike/clike.js"></script>
     <script src="assets/js/index.js"></script>
+
+    <!-- AST Tree-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="dist/jstree.min.js"></script>
+
+    <script>
+        $('#html').jstree();
+    </script>
+
 </body>
+
 
 </html>
