@@ -62,16 +62,20 @@ function nuevaOperacion(operandoIzq, operandoDer, tipo) {
         return {
             /* PARA JSTREE */
             text: "Operacion",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipo
+                            text: tipo,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Operador",
+                    state: { opened: true },
                     children: [operandoIzq]
                 }
             ],
@@ -85,19 +89,24 @@ function nuevaOperacion(operandoIzq, operandoDer, tipo) {
         return {
             /* PARA JSTREE */
             text: "Operacion",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipo
+                            text: tipo,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Operador Izquierdo",
+                    state: { opened: true },
                     children: [operandoIzq]
                 }, {
                     text: "Operador Derecho",
+                    state: { opened: true },
                     children: [operandoDer]
                 }
             ],
@@ -112,16 +121,20 @@ function nuevaLlamadaFuncion(id, parametros) {
     return {
         /* PARA JSTREE */
         text: "Llamada a Funcion",
+        state: { opened: true },
         children: [
             {
                 text: "Identificador",
+                state: { opened: true },
                 children: [
                     {
-                        text: id
+                        text: id,
+                        state: { opened: true }
                     }
                 ]
             }, {
                 text: "Parametros",
+                state: { opened: true },
                 children: parametros
             }
         ],
@@ -134,16 +147,20 @@ function nuevaClase(id, instrucciones) {
     return {
         /* PARA JSTREE */
         text: "Clase",
+        state: { opened: true },
         children: [
             {
                 text: "Identificador",
+                state: { opened: true },
                 children: [
                     {
-                        text: id
+                        text: id,
+                        state: { opened: true }
                     }
                 ]
             }, {
                 text: "Instrucciones",
+                state: { opened: true },
                 children: instrucciones
             }
         ],
@@ -159,6 +176,7 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Return",
+            state: { opened: true },
             children: [
                 valor
             ],
@@ -172,6 +190,7 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Bloque de Sentencias",
+            state: { opened: true },
             children: instrucciones,
             /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.BLOQUE_SENTENCIAS,
@@ -183,12 +202,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Asignacion",
+            state: { opened: true },
             children: [
                 {
                     text: identificador,
+                    state: { opened: true },
                     children: [
                         {
-                            text: valor
+                            text: valor,
+                            state: { opened: true }
                         }
                     ]
                 }
@@ -204,9 +226,11 @@ exports.instruccionesAPI = {
         return {
             /* DATOS PARA JSTREE */
             text: "Import",
+            state: { opened: true },
             children: [
                 {
-                    text: identificador
+                    text: identificador,
+                    state: { opened: true }
                 }
             ],
             /* DATOS CLASICOS */
@@ -227,6 +251,7 @@ exports.instruccionesAPI = {
         return {
             /* DATOS PARA JSTREE */
             text: "Parametro",
+            state: { opened: true },
             children: [
                 parametro
             ],
@@ -239,12 +264,15 @@ exports.instruccionesAPI = {
         return {
             /* DATOS PARA JSTREE */
             text: "Parametro",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipo
+                            text: tipo,
+                            state: { opened: true }
                         }
                     ]
                 },
@@ -268,9 +296,11 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: tipo,
+            state: { opened: true },
             children: [
                 {
-                    text: valor
+                    text: valor,
+                    state: { opened: true }
                 }
             ],
             /* DATOS CLASICOS */
@@ -291,19 +321,24 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Funcion",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipoFun
+                            text: tipoFun,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Identificador",
+                    state: { opened: true },
                     children: identificador
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],
@@ -319,26 +354,33 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Funcion",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipoFun
+                            text: tipoFun,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Identificador",
+                    state: { opened: true },
                     children: [
                         {
-                            text: identificador
+                            text: identificador,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Parametros",
+                    state: { opened: true },
                     children: [parametros]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],
@@ -355,19 +397,24 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Variable",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipo
+                            text: tipo,
+                            state: { opened: true }
                         }
                     ]
                 }, {
                     text: "Identificadores",
+                    state: { opened: true },
                     children: identificadores
                 }, {
                     text: "Valor",
+                    state: { opened: true },
                     children: [valor]
                 }
             ],
@@ -383,16 +430,20 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Variable",
+            state: { opened: true },
             children: [
                 {
                     text: "Tipo",
+                    state: { opened: true },
                     children: [
                         {
-                            text: tipo
+                            text: tipo,
+                            state: { opened: true },
                         }
                     ]
                 }, {
                     text: "Identificadores",
+                    state: { opened: true },
                     children: identificadores
                 }
             ],
@@ -407,6 +458,7 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "System.out.print",
+            state: { opened: true },
             children: [expresionCadena],
             /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINT,
@@ -418,6 +470,7 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "System.out.println",
+            state: { opened: true },
             children: [expresionCadena],
             /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINTLN,
@@ -429,12 +482,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Do While",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],
@@ -449,12 +505,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "While",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: [instrucciones]
                 }
             ],
@@ -469,15 +528,19 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "For",
+            state: { opened: true },
             children: [
                 {
                     text: "Condiciones",
+                    state: { opened: true },
                     children: [
                         {
                             text: "Variable",
+                            state: { opened: true },
                             children: [
                                 {
                                     text: variable,
+                                    state: { opened: true },
                                     children: [
                                         val
                                     ]
@@ -485,14 +548,17 @@ exports.instruccionesAPI = {
                             ]
                         }, {
                             text: "Expresion logica",
+                            state: { opened: true },
                             children: [expresionLogica]
                         }, {
                             text: "Incremento/Decremento",
+                            state: { opened: true },
                             children: [variable + aod]
                         }
                     ]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: [instrucciones]
                 }
             ],
@@ -510,12 +576,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "If",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: [instrucciones]
                 }
             ],
@@ -530,18 +599,23 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "If",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: [instruccionesTrue]
                 }, {
                     text: "Else",
+                    state: { opened: true },
                     children: [
                         {
                             text: "Instrucciones",
+                            state: { opened: true },
                             children: [instruccionesFalse]
                         }
                     ]
@@ -559,15 +633,19 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "If",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }, {
                     text: "Lista Else If",
+                    state: { opened: true },
                     children: list_elseif
                 }
             ],
@@ -583,18 +661,23 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "If",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: [instruccionesTrue]
                 }, {
                     text: "Lista Else If",
+                    state: { opened: true },
                     children: list_elseif
                 }, {
                     text: "Else",
+                    state: { opened: true },
                     children: [instruccionesFalse]
                 }
             ],
@@ -611,12 +694,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Else if",
+            state: { opened: true },
             children: [
                 {
                     text: "Condicion",
+                    state: { opened: true },
                     children: [expresionLogica]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],
@@ -631,12 +717,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Switch",
+            state: { opened: true },
             children: [
                 {
                     text: "Expresion",
+                    state: { opened: true },
                     children: [expresionNumerica]
                 }, {
                     text: "Casos",
+                    state: { opened: true },
                     children: casos
                 }
             ],
@@ -651,12 +740,15 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Case",
+            state: { opened: true },
             children: [
                 {
                     text: "Expresion",
+                    state: { opened: true },
                     children: [expresion]
                 }, {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],
@@ -671,9 +763,11 @@ exports.instruccionesAPI = {
         return {
             /* PARA JSTREE */
             text: "Default",
+            state: { opened: true },
             children: [
                 {
                     text: "Instrucciones",
+                    state: { opened: true },
                     children: instrucciones
                 }
             ],

@@ -39,18 +39,18 @@ function index(pestanas:string, pestana:string){
 
     var i=0;
     while(typeof list_cont.getElementsByTagName('div')[i] != 'undefined'){
-        $(document).ready(function(){
-            $(list_cont.getElementsByTagName('div')[i]).css('display','none');
-            $(list_pestanas.getElementsByTagName('li')[i]).css('background','');
-            $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom','');
+        $j(document).ready(function(){
+            $j(list_cont.getElementsByTagName('div')[i]).css('display','none');
+            $j(list_pestanas.getElementsByTagName('li')[i]).css('background','');
+            $j(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom','');
         });
         i+=1;
     }
 
-    $(document).ready(function(){
-        $(cont_pestana).css('display','');
-        $(pestana1).css('background','dimgray');
-        $(pestana1).css('padding-bottom','2px');
+    $j(document).ready(function(){
+        $j(cont_pestana).css('display','');
+        $j(pestana1).css('background','dimgray');
+        $j(pestana1).css('padding-bottom','2px');
 
     });
 
@@ -230,7 +230,7 @@ function Conn(){
     var urlAnalizar:string = "http://localhost:3000/analizar/";
     var urlErrores:string = "http://localhost:3000/errores/";
 
-    $.post(urlAnalizar,{text:texto},function(data,status){
+    $j.post(urlAnalizar,{text:texto},function(data,status){
         if(status.toString() == 'success'){            
             console.log(data);
             /* CREAR JSTREE */            
@@ -241,7 +241,7 @@ function Conn(){
     });
 
     
-    $.get(urlErrores, function(data,status){
+    $j.get(urlErrores, function(data,status){
         if(status.toString() == 'success'){
             /* PINTAR LA TABLA CON LOS ERRORES */           
             let conteo:number = 1;
@@ -287,11 +287,12 @@ function Conn(){
 }
 
 function createJSTree(jsondata:any){    
+    $('#html').jstree("destroy");
     $('#html').jstree({
         'core': {
             'data':jsondata
         }        
-    });    
+    });        
 }
 
 let evaluarButton:HTMLButtonElement = <HTMLButtonElement> document.getElementById('btn-evaluar');

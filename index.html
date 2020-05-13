@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="assets/css/Bootstrap-DataTables.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
 
+
     <link rel="stylesheet" href="dist/themes/default/style.min.css">
 
     <link rel="stylesheet" href="codemirror-5.53.2/theme/darcula.css">
@@ -151,16 +152,19 @@
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery-1.7.2.min.js"></script>
+    <script src="assets/js/jquery-source.min.js"></script>
+    <script src="assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script>
+        var $j = jQuery.noConflict(true);
+    </script>
     <script src="assets/js/Footer---Made-with-love.js"></script>
     <script src="assets/js/Navbar---Apple.js"></script>
     <script src="codemirror-5.53.2/lib/codemirror.js"></script>
     <script src="codemirror-5.53.2/mode/clike/clike.js"></script>
     <script src="assets/js/index.js"></script>
 
-    <!-- AST Tree-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- AST Tree -->
+    <script src="dist/jquery.min.js" type="text/javascript"></script>
     <script src="dist/jstree.min.js"></script>
 
 </body>
