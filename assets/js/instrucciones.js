@@ -58,20 +58,96 @@ exports.TIPO_TRANSFERENCIA = {
     CASE: 'TR_CASE',
 };
 function nuevaOperacion(operandoIzq, operandoDer, tipo) {
-    return {
-        operandoIzq: operandoIzq,
-        operandoDer: operandoDer,
-        tipo: tipo
-    };
+    if (operandoDer === "undefined") {
+        return {
+            /* PARA JSTREE */
+            text: "Operacion",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipo
+                        }
+                    ]
+                }, {
+                    text: "Operador",
+                    children: [operandoIzq]
+                }
+            ],
+            /* DATOS CLASICOS */
+            operandoIzq: operandoIzq,
+            operandoDer: operandoDer,
+            tipo: tipo
+        };
+    }
+    else {
+        return {
+            /* PARA JSTREE */
+            text: "Operacion",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipo
+                        }
+                    ]
+                }, {
+                    text: "Operador Izquierdo",
+                    children: [operandoIzq]
+                }, {
+                    text: "Operador Derecho",
+                    children: [operandoDer]
+                }
+            ],
+            /* DATOS CLASICOS */
+            operandoIzq: operandoIzq,
+            operandoDer: operandoDer,
+            tipo: tipo
+        };
+    }
 }
 function nuevaLlamadaFuncion(id, parametros) {
     return {
+        /* PARA JSTREE */
+        text: "Llamada a Funcion",
+        children: [
+            {
+                text: "Identificador",
+                children: [
+                    {
+                        text: id
+                    }
+                ]
+            }, {
+                text: "Parametros",
+                children: parametros
+            }
+        ],
+        /* DATOS CLASICOS */
         id: id,
         parametros: parametros
     };
 }
 function nuevaClase(id, instrucciones) {
     return {
+        /* PARA JSTREE */
+        text: "Clase",
+        children: [
+            {
+                text: "Identificador",
+                children: [
+                    {
+                        text: id
+                    }
+                ]
+            }, {
+                text: "Instrucciones",
+                children: instrucciones
+            }
+        ],
+        /* DATOS CLASICOS */
         tipo: exports.TIPO_INSTRUCCION.CLASS,
         id: id,
         instrucciones: instrucciones
@@ -81,6 +157,12 @@ exports.instruccionesAPI = {
     /* OBJ PARA RETURN */
     nuevoReturn: function (valor) {
         return {
+            /* PARA JSTREE */
+            text: "Return",
+            children: [
+                valor
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.RETURN,
             valor: valor
         };
@@ -88,6 +170,10 @@ exports.instruccionesAPI = {
     /* OBJ PARA BLOQUE DE SENTENCIAS */
     nuevoBloqueSentencias: function (instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Bloque de Sentencias",
+            children: instrucciones,
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.BLOQUE_SENTENCIAS,
             instrucciones: instrucciones
         };
@@ -95,6 +181,19 @@ exports.instruccionesAPI = {
     /* OBJ PARA ASIGNACION DE VARIABLES */
     nuevaAsignacion: function (identificador, valor) {
         return {
+            /* PARA JSTREE */
+            text: "Asignacion",
+            children: [
+                {
+                    text: identificador,
+                    children: [
+                        {
+                            text: valor
+                        }
+                    ]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ASIGNACION,
             identificador: identificador,
             valor: valor
@@ -103,6 +202,14 @@ exports.instruccionesAPI = {
     /* OBJ PARA HACER IMPORTS */
     nuevoImport: function (identificador) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Import",
+            children: [
+                {
+                    text: identificador
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IMPORT,
             identificador: identificador
         };
@@ -118,12 +225,32 @@ exports.instruccionesAPI = {
     /* OBJ PARA PARAMETROS */
     nuevoParametros: function (parametro) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Parametro",
+            children: [
+                parametro
+            ],
+            /* DATOS CLASICOS */
             parametro: parametro
         };
     },
     /* OBJ PARAMETRO DE FUNCION */
     nuevoParametroFun: function (tipo, parametro) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Parametro",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipo
+                        }
+                    ]
+                },
+                parametro
+            ],
+            /* DATOS CLASICOS */
             tipo: tipo,
             parametro: parametro
         };
@@ -139,13 +266,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA CREAR UNA VARIABLE */
     nuevoValor: function (valor, tipo) {
         return {
+            /* PARA JSTREE */
+            text: tipo,
+            children: [
+                {
+                    text: valor
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: tipo,
             valor: valor
         };
     },
     /* OBJ OPERACION CON UN VALOR */
     nuevaOperacionUnaria: function (operando, tipo) {
-        return nuevaOperacion(operando, undefined, tipo);
+        return nuevaOperacion(operando, "undefined", tipo);
     },
     /* OBJ PARA OPERACION CON DOS VALORES */
     nuevaOperacionBinaria: function (operandoIzq, operandoDer, tipo) {
@@ -154,6 +289,25 @@ exports.instruccionesAPI = {
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFun: function (tipoFun, identificador, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Funcion",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipoFun
+                        }
+                    ]
+                }, {
+                    text: "Identificador",
+                    children: identificador
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
             tipoFun: tipoFun,
             identificador: identificador,
@@ -163,6 +317,32 @@ exports.instruccionesAPI = {
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFunParametros: function (tipoFun, identificador, parametros, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Funcion",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipoFun
+                        }
+                    ]
+                }, {
+                    text: "Identificador",
+                    children: [
+                        {
+                            text: identificador
+                        }
+                    ]
+                }, {
+                    text: "Parametros",
+                    children: [parametros]
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
             tipoFun: tipoFun,
             identificador: identificador,
@@ -173,6 +353,25 @@ exports.instruccionesAPI = {
     /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
     nuevoDeclaracionVarValor: function (identificadores, tipo, valor) {
         return {
+            /* PARA JSTREE */
+            text: "Variable",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipo
+                        }
+                    ]
+                }, {
+                    text: "Identificadores",
+                    children: identificadores
+                }, {
+                    text: "Valor",
+                    children: [valor]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
             identificadores: identificadores,
             tipo_dato: tipo,
@@ -182,6 +381,22 @@ exports.instruccionesAPI = {
     /* OBJ PARA DECLARACION DE VARIABLES VACIAS*/
     nuevoDeclaracionVar: function (identificadores, tipo) {
         return {
+            /* PARA JSTREE */
+            text: "Variable",
+            children: [
+                {
+                    text: "Tipo",
+                    children: [
+                        {
+                            text: tipo
+                        }
+                    ]
+                }, {
+                    text: "Identificadores",
+                    children: identificadores
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
             identificadores: identificadores,
             tipo_dato: tipo
@@ -190,6 +405,10 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION PRINT */
     nuevoPrint: function (expresionCadena) {
         return {
+            /* PARA JSTREE */
+            text: "System.out.print",
+            children: [expresionCadena],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINT,
             expresionCadena: expresionCadena
         };
@@ -197,12 +416,29 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION PRINTLN */
     nuevoPrintln: function (expresionCadena) {
         return {
+            /* PARA JSTREE */
+            text: "System.out.println",
+            children: [expresionCadena],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINTLN,
             expresionCadena: expresionCadena
         };
     },
+    /* OBJ PARA INSTRUCCION DO WHILE */
     nuevoDoWhile: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Do While",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DO_WHILE,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -211,6 +447,18 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION WHILE */
     nuevoWhile: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "While",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.WHILE,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -219,6 +467,36 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION FOR */
     nuevoFor: function (variable, val, expresionLogica, aod, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "For",
+            children: [
+                {
+                    text: "Condiciones",
+                    children: [
+                        {
+                            text: "Variable",
+                            children: [
+                                {
+                                    text: variable,
+                                    children: [
+                                        val
+                                    ]
+                                }
+                            ]
+                        }, {
+                            text: "Expresion logica",
+                            children: [expresionLogica]
+                        }, {
+                            text: "Incremento/Decremento",
+                            children: [variable + aod]
+                        }
+                    ]
+                }, {
+                    text: "Instrucciones",
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.FOR,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones,
@@ -230,6 +508,18 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION IF */
     nuevoIf: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -238,6 +528,26 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION ELSE */
     nuevoElse: function (expresionLogica, instruccionesTrue, instruccionesFalse) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: [instruccionesTrue]
+                }, {
+                    text: "Else",
+                    children: [
+                        {
+                            text: "Instrucciones",
+                            children: [instruccionesFalse]
+                        }
+                    ]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE,
             expresionLogica: expresionLogica,
             instruccionesTrue: instruccionesTrue,
@@ -247,6 +557,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA LISTA DE ELSE IF */
     nuevoIfListElseIf: function (expresionLogica, instrucciones, list_elseif) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }, {
+                    text: "Lista Else If",
+                    children: list_elseif
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones,
@@ -256,6 +581,24 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA LISTA DE ELSE IF CUANDO EXISTE UN ELSE */
     nuevoIfElseListElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse, list_elseif) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: [instruccionesTrue]
+                }, {
+                    text: "Lista Else If",
+                    children: list_elseif
+                }, {
+                    text: "Else",
+                    children: [instruccionesFalse]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE,
             expresionLogica: expresionLogica,
             instruccionesTrue: instruccionesTrue,
@@ -266,6 +609,18 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA INSTRUCCION ELSE IF */
     nuevoElseIf: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Else if",
+            children: [
+                {
+                    text: "Condicion",
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE_IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -274,6 +629,18 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA INSTRUCCION SWITCH */
     nuevoSwitch: function (expresionNumerica, casos) {
         return {
+            /* PARA JSTREE */
+            text: "Switch",
+            children: [
+                {
+                    text: "Expresion",
+                    children: [expresionNumerica]
+                }, {
+                    text: "Casos",
+                    children: casos
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.SWITCH,
             expresionNumerica: expresionNumerica,
             casos: casos
@@ -282,6 +649,18 @@ exports.instruccionesAPI = {
     /* OBJ CASE PARA SWITCH */
     nuevoCase: function (expresion, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Case",
+            children: [
+                {
+                    text: "Expresion",
+                    children: [expresion]
+                }, {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.CASE,
             expresion: expresion,
             instrcciones: instrucciones
@@ -290,16 +669,17 @@ exports.instruccionesAPI = {
     /* OBJ DEFAULT PARA SWITCH */
     nuevoDefault: function (instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Default",
+            children: [
+                {
+                    text: "Instrucciones",
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
             instrucciones: instrucciones
-        };
-    },
-    /* OBJ DEFAULT PARA SWITCH CON VALOR DE TRANSFERENCIA */
-    nuevoDefaultTransferencia: function (instrucciones, transferencia) {
-        return {
-            tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
-            instrucciones: instrucciones,
-            transferencia: transferencia
         };
     },
     /* CREAR OBJ DE TIPO OPERADOR */

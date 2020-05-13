@@ -231,8 +231,10 @@ function Conn(){
     var urlErrores:string = "http://localhost:3000/errores/";
 
     $.post(urlAnalizar,{text:texto},function(data,status){
-        if(status.toString() == 'success'){
+        if(status.toString() == 'success'){            
             console.log(data);
+            /* CREAR JSTREE */            
+            createJSTree(data);            
         }else{
             alert("Error estado de conexion "+status);
         }
@@ -245,8 +247,7 @@ function Conn(){
             let conteo:number = 1;
             let table:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaErrores');            
             
-            var i = table.rows.length;
-            console.log(i);
+            var i = table.rows.length;           
             
             while(i>1){
                 i--
@@ -283,6 +284,14 @@ function Conn(){
         }
     });
     
+}
+
+function createJSTree(jsondata:any){    
+    $('#html').jstree({
+        'core': {
+            'data':jsondata
+        }        
+    });    
 }
 
 let evaluarButton:HTMLButtonElement = <HTMLButtonElement> document.getElementById('btn-evaluar');

@@ -187,6 +187,8 @@ function Conn() {
     $.post(urlAnalizar, { text: texto }, function (data, status) {
         if (status.toString() == 'success') {
             console.log(data);
+            /* CREAR JSTREE */
+            createJSTree(data);
         }
         else {
             alert("Error estado de conexion " + status);
@@ -198,7 +200,6 @@ function Conn() {
             let conteo = 1;
             let table = document.getElementById('tablaErrores');
             var i = table.rows.length;
-            console.log(i);
             while (i > 1) {
                 i--;
                 table.deleteRow(i);
@@ -223,6 +224,13 @@ function Conn() {
         }
         else {
             alert("Error estado de conexion " + status);
+        }
+    });
+}
+function createJSTree(jsondata) {
+    $('#html').jstree({
+        'core': {
+            'data': jsondata
         }
     });
 }
