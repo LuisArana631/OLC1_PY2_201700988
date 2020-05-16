@@ -28,6 +28,8 @@ exports.TIPO_OPERACION = {
     AND: 'OP_AND',
     OR: 'OP_OR',
     NOT: 'OP_NOT',
+    /* ERROR */
+    ERROR: 'OP_ERROR',
 };
 exports.TIPO_INSTRUCCION = {
     CLASS: 'IN_CLASS',
@@ -143,6 +145,7 @@ function nuevaLlamadaFuncion(id, parametros) {
         parametros: parametros
     };
 }
+/* OBJ PARA CLASE */
 function nuevaClase(id, instrucciones) {
     return {
         /* PARA JSTREE */
@@ -171,6 +174,21 @@ function nuevaClase(id, instrucciones) {
     };
 }
 exports.instruccionesAPI = {
+    /* OBJ PARA EVITAR EL ERROR */
+    nuevoError: function (error) {
+        return {
+            text: "Error",
+            state: { opened: true },
+            icon: "https://png-4.findicons.com/files/icons/1014/ivista/16/error.png",
+            children: [
+                {
+                    text: error,
+                    state: { opened: true },
+                    icon: "https://png-4.findicons.com/files/icons/1014/ivista/16/error.png"
+                }
+            ]
+        };
+    },
     /* OBJ PARA RETURN */
     nuevoReturn: function (valor) {
         return {
@@ -208,10 +226,7 @@ exports.instruccionesAPI = {
                     text: identificador,
                     state: { opened: true },
                     children: [
-                        {
-                            text: valor,
-                            state: { opened: true }
-                        }
+                        valor
                     ]
                 }
             ],
@@ -335,11 +350,13 @@ exports.instruccionesAPI = {
                 }, {
                     text: "Identificador",
                     state: { opened: true },
-                    children: identificador
+                    children: [{
+                            text: identificador
+                        }]
                 }, {
                     text: "Instrucciones",
                     state: { opened: true },
-                    children: instrucciones
+                    children: [instrucciones]
                 }
             ],
             /* DATOS CLASICOS */
@@ -377,11 +394,11 @@ exports.instruccionesAPI = {
                 }, {
                     text: "Parametros",
                     state: { opened: true },
-                    children: [parametros]
+                    children: parametros
                 }, {
                     text: "Instrucciones",
                     state: { opened: true },
-                    children: instrucciones
+                    children: [instrucciones]
                 }
             ],
             /* DATOS CLASICOS */
