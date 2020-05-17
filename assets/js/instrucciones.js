@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const router_express_1 = require("./router_express");
+const guia_1 = require("./guia");
+const nodoGuia_1 = require("./nodoGuia");
 exports.TIPO_VALOR = {
     NUMERO: 'VAL_NUMERO',
     IDENTIFICADOR: 'VAL_IDENTIFICADOR',
@@ -147,6 +150,11 @@ function nuevaLlamadaFuncion(id, parametros) {
 }
 /* OBJ PARA CLASE */
 function nuevaClase(id, instrucciones) {
+    if (router_express_1.countEjecuciones === 1) {
+        guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(undefined, id, undefined, "Clase", undefined, instrucciones));
+    }
+    else {
+    }
     return {
         /* PARA JSTREE */
         text: "Clase",
@@ -333,6 +341,11 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFun: function (tipoFun, identificador, instrucciones) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(undefined, identificador, undefined, "Funcion", undefined, instrucciones));
+        }
+        else {
+        }
         return {
             /* PARA JSTREE */
             text: "Funcion",
@@ -368,6 +381,11 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFunParametros: function (tipoFun, identificador, parametros, instrucciones) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipoFun, identificador, undefined, "Funcion", parametros, instrucciones.children));
+        }
+        else {
+        }
         return {
             /* PARA JSTREE */
             text: "Funcion",

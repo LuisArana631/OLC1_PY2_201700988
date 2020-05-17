@@ -12,4 +12,15 @@ class guia extends Array {
             this.prototype.pop();
         }
     }
+    static getLength() {
+        return this.prototype.length;
+    }
+    static getGuia() {
+        var aux = new Array;
+        this.prototype.forEach(guide => {
+            aux.push(guide);
+        });
+        return aux;
+    }
 }
+exports.guia = guia;

@@ -9,8 +9,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const errores_1 = require("./errores");
+const guia_1 = require("./guia");
 const analizador = __importStar(require("../jison/analizador"));
 const router = express_1.Router();
+exports.countEjecuciones = 0;
 router.post('/analizar/', (req, res) => {
     errores_1.errores.clear();
     var entrada = req.body.text;
@@ -23,6 +25,8 @@ router.get('/errores/', (req, res) => {
 });
 function parser(texto) {
     try {
+        exports.countEjecuciones++;
+        console.log(guia_1.guia.getGuia());
         return analizador.parse(texto);
     }
     catch (er) {

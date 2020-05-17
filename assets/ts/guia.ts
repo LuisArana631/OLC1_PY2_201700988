@@ -1,6 +1,6 @@
 import { nodoGuia } from './nodoGuia';
 
-class guia extends Array<nodoGuia>{
+export class guia extends Array<nodoGuia>{
     constructor(){
         super();
     }
@@ -13,6 +13,20 @@ class guia extends Array<nodoGuia>{
         while(this.prototype.length > 0){
             this.prototype.pop();
         }
+    }
+
+    public static getLength():number{
+        return this.prototype.length;
+    }
+
+    public static getGuia():Array<nodoGuia>{
+        var aux:Array<nodoGuia> = new Array;
+
+        this.prototype.forEach(guide => {            
+            aux.push(guide);
+        });
+
+        return aux;
     }
 
     

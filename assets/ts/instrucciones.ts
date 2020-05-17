@@ -1,3 +1,7 @@
+import { countEjecuciones } from "./router_express";
+import { guia } from "./guia";
+import { nodoGuia } from "./nodoGuia";
+
 export const TIPO_VALOR = {
   NUMERO: 'VAL_NUMERO',
   IDENTIFICADOR: 'VAL_IDENTIFICADOR',
@@ -153,6 +157,12 @@ function nuevaLlamadaFuncion(id:any,parametros:any){
 
 /* OBJ PARA CLASE */
 function nuevaClase(id:any, instrucciones:any){
+  if(countEjecuciones === 1){
+    guia.addGuia(new nodoGuia(undefined,id,undefined,"Clase",undefined,instrucciones));
+  }else{
+
+  }
+
   return{
     /* PARA JSTREE */
     text:"Clase",
@@ -354,6 +364,12 @@ export const instruccionesAPI = {
 
   /* OBJ PARA DECLARACION DE FUNCIONES */
   nuevaDeclaracionFun: function (tipoFun:any, identificador:any, instrucciones:any){
+    if(countEjecuciones === 1){
+      guia.addGuia(new nodoGuia(undefined,identificador,undefined,"Funcion",undefined,instrucciones));
+    }else{
+  
+    }
+
     return{
       /* PARA JSTREE */
       text: "Funcion",
@@ -390,6 +406,12 @@ export const instruccionesAPI = {
 
   /* OBJ PARA DECLARACION DE FUNCIONES */
   nuevaDeclaracionFunParametros: function (tipoFun:any, identificador:any, parametros:any, instrucciones:any){
+    if(countEjecuciones === 1){
+      guia.addGuia(new nodoGuia(tipoFun,identificador,undefined,"Funcion",parametros,instrucciones.children));
+    }else{
+  
+    }
+
     return{
       /* PARA JSTREE */
       text: "Funcion",

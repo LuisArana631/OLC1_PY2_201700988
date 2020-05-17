@@ -6,15 +6,29 @@ export class nodoGuia{
     private countParam:any;
     private param:any;
     private countMetodos:any;
+    private instrucciones:any;
 
-    constructor(tipo:any, identificador:any, padre:any, tipoCopia:any, countParam:any, param:any, countMetodos:any){
+    constructor(tipo:any, identificador:any, padre:any, tipoCopia:any, param:any, instrucciones:any){
         this.tipo = tipo;
         this.identificador = identificador;
         this.padre = padre;
         this.tipoCopia = tipoCopia;
-        this.countParam = countParam;
+
+        if(param === undefined){
+            this.countParam = undefined;
+        }else{
+            this.countParam = param.length;
+        }
+
         this.param = param;
-        this.countMetodos = countMetodos;
+
+        if(instrucciones){
+            this.countMetodos = instrucciones.length;
+        }else{
+            this.countMetodos = undefined;
+        }
+        
+        this.instrucciones = instrucciones;
     }
 
     get Tipo():any{
@@ -26,8 +40,20 @@ export class nodoGuia{
     get Padre():any{
         return this.padre;
     }
-    get TipoCopia():any{
+    get TipoCopia():string{
         return this.tipoCopia;
+    }
+    get CountParam():any{
+        return this.countParam;
+    }
+    get Param():any{
+        return this.param;
+    }
+    get CountMetodos():any{
+        return this.countMetodos;
+    }
+    get Instrucciones():any{
+        return this.instrucciones;
     }
 
 }
