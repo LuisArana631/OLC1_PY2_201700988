@@ -223,12 +223,28 @@ class pestana_class{
     }
 }
 
+function Restablecer(){
+    var urlRestablecer:string = "http://localhost:3000/restablecer/"
+
+    $j.get(urlRestablecer, function(data,status){
+        if(status.toString() == 'success' ){
+            console.log(data);
+        }else{
+            alert("Error estado de conexion "+status);
+        }
+    });
+}
+
+let restablecerButton:HTMLButtonElement = <HTMLButtonElement> document.getElementById('btn-restablecer');
+restablecerButton.addEventListener('click',Restablecer,false);
+
+
 // End points de go para conectar con express
 function Conn(){    
     var texto:string = (<HTMLTextAreaElement> document.getElementById(get_pest())).value;        
 
     var urlAnalizar:string = "http://localhost:3000/analizar/";
-    var urlErrores:string = "http://localhost:3000/errores/";
+    var urlErrores:string = "http://localhost:3000/errores/";        
 
     $j.post(urlAnalizar,{text:texto},function(data,status){
         if(status.toString() == 'success'){            
@@ -239,7 +255,6 @@ function Conn(){
             alert("Error estado de conexion "+status);
         }
     });
-
     
     $j.get(urlErrores, function(data,status){
         if(status.toString() == 'success'){

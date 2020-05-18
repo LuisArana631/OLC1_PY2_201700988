@@ -179,6 +179,19 @@ class pestana_class {
         return this.nombre;
     }
 }
+function Restablecer() {
+    var urlRestablecer = "http://localhost:3000/restablecer/";
+    $j.get(urlRestablecer, function (data, status) {
+        if (status.toString() == 'success') {
+            console.log(data);
+        }
+        else {
+            alert("Error estado de conexion " + status);
+        }
+    });
+}
+let restablecerButton = document.getElementById('btn-restablecer');
+restablecerButton.addEventListener('click', Restablecer, false);
 // End points de go para conectar con express
 function Conn() {
     var texto = document.getElementById(get_pest()).value;

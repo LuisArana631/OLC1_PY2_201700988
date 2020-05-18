@@ -55,7 +55,8 @@
                 <button class="btn btn-primary border-white" type="button" id="btn-evaluar" style="background-color: #007bff;height: 44px;">Evaluar</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-add" type="button" style="background-color: #007bff;height: 44px;">Nueva Pestaña</button>
                 <button class="btn btn-primary border rounded border-white" id="btn-delete" type="button" style="background-color: #007bff;height: 44px;">Quitar Pestaña</button>
-                <button class="btn btn-primary border rounded border-white" id="btn-save" type="button" style="background-color: #007bff;height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" type="button" style="background-color: #007bff;height: 44px;">Reportes</button></div>
+                <button class="btn btn-primary border rounded border-white" id="btn-save" type="button" style="background-color: #007bff;height: 44px;">Guardar</button><button class="btn btn-primary border rounded border-white" id="btn-restablecer" type="button"
+                    style="background-color: #007bff;height: 44px;">Restablecer Guia</button></div>
             <button data-target="#navcol-1" data-toggle="collapse" class="navbar-toggler"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         </div>
     </nav>
@@ -84,11 +85,12 @@
                     <a style="color:white" id="profile1-tab" data-toggle="tab" href="#profile1" role="tab" aria-controls="profile1" aria-selected="false" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0 border">AST Tree</a>
                 </li>
                 <li class="nav-item flex-sm-fill">
-                    <a style="color:white" id="contact1-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false" class="nav-link text-uppercase font-weight-bold rounded-0 border">Contact</a>
+                    <a style="color:white" id="contact1-tab" data-toggle="tab" href="#contact1" role="tab" aria-controls="contact1" aria-selected="false" class="nav-link text-uppercase font-weight-bold rounded-0 border">Copias</a>
                 </li>
             </ul>
             <div id="myTab1Content" class="tab-content">
                 <div id="home1" role="tabpanel" aria-labelledby="home-tab" class="tab-pane fade px-4 py-5 show active">
+
                     <div class="table-responsive rounded bg-dark">
                         <table class="table" id="tablaErrores" style="color:white;">
                             <thead>
@@ -105,6 +107,7 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
                 <div id="profile1" role="tabpanel" aria-labelledby="profile-tab" class="tab-pane fade px-4 py-5">
 
@@ -114,6 +117,67 @@
 
                 </div>
                 <div id="contact1" role="tabpanel" aria-labelledby="contact-tab" class="tab-pane fade px-4 py-5">
+
+                    <h1 style="color:white;">Variables Copiadas</h1>
+
+                    <div class="table-responsive rounded bg-dark">
+                        <table class="table" id="tablaVariables" style="color:white;">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%">No.</th>
+                                    <th style="width:20%">Tipo Error</th>
+                                    <th style="width:25%">Error</th>
+                                    <th style="width:10%">Linea</th>
+                                    <th style="width:35%">Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br><br>
+
+                    <h1 style="color:white;">Funciones Copiadas</h1>
+
+                    <div class="table-responsive rounded bg-dark">
+                        <table class="table" id="tablaFunciones" style="color:white;">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%">No.</th>
+                                    <th style="width:20%">Tipo Error</th>
+                                    <th style="width:25%">Error</th>
+                                    <th style="width:10%">Linea</th>
+                                    <th style="width:35%">Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br><br>
+
+                    <h1 style="color:white;">Clases Copiadas</h1>
+
+                    <div class="table-responsive rounded bg-dark">
+                        <table class="table" id="tablaClases" style="color:white;">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%">No.</th>
+                                    <th style="width:20%">Tipo Error</th>
+                                    <th style="width:25%">Error</th>
+                                    <th style="width:10%">Linea</th>
+                                    <th style="width:35%">Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             </div>

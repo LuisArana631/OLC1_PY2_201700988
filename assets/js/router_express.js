@@ -9,7 +9,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const errores_1 = require("./errores");
-const guia_1 = require("./guia");
 const analizador = __importStar(require("../jison/analizador"));
 const router = express_1.Router();
 exports.countEjecuciones = 0;
@@ -23,10 +22,14 @@ router.get('/errores/', (req, res) => {
     var resultado = getErrores();
     res.send(resultado);
 });
+router.get('/restablecer/', (req, res) => {
+    exports.countEjecuciones = 0;
+    res.send("Restablecido " + exports.countEjecuciones);
+});
 function parser(texto) {
     try {
         exports.countEjecuciones++;
-        console.log(guia_1.guia.getGuia());
+        console.log(exports.countEjecuciones);
         return analizador.parse(texto);
     }
     catch (er) {

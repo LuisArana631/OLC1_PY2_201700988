@@ -18,10 +18,15 @@ router.get('/errores/', (req:Request, res:Response) =>  {
     res.send(resultado);
 });
 
+router.get('/restablecer/', (req:Request, res:Response) => {
+    countEjecuciones = 0;
+    res.send("Restablecido " +countEjecuciones);
+});
+
 function parser(texto:string){
     try{
         countEjecuciones++;
-        console.log(guia.getGuia());
+        console.log(countEjecuciones);
         return analizador.parse(texto);
     }catch (er){
         return "Error en compilacion de entrada: " + er.toString(); 
