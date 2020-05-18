@@ -85,7 +85,7 @@ function nuevaOperacion(operandoIzq, operandoDer, tipo) {
                 }
             ],
             /* DATOS CLASICOS */
-            operandoIzq: operandoIzq,
+            operandoIzq: [operandoIzq],
             operandoDer: operandoDer,
             tipo: tipo
         };
@@ -182,6 +182,16 @@ function nuevaClase(id, instrucciones) {
     };
 }
 exports.instruccionesAPI = {
+    /* OBJ PARA NEGACION */
+    nuevaNegacion: function (interior) {
+        return {
+            text: "Not",
+            state: { opened: true },
+            children: [
+                interior
+            ]
+        };
+    },
     /* OBJ PARA EVITAR EL ERROR */
     nuevoError: function (error) {
         return {
@@ -429,6 +439,11 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
     nuevoDeclaracionVarValor: function (identificadores, tipo, valor) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
+        else {
+        }
         return {
             /* PARA JSTREE */
             text: "Variable",
@@ -462,6 +477,11 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE VARIABLES VACIAS*/
     nuevoDeclaracionVar: function (identificadores, tipo) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
+        else {
+        }
         return {
             /* PARA JSTREE */
             text: "Variable",
@@ -526,7 +546,7 @@ exports.instruccionesAPI = {
                 }, {
                     text: "Instrucciones",
                     state: { opened: true },
-                    children: instrucciones
+                    children: [instrucciones]
                 }
             ],
             /* DATOS CLASICOS */

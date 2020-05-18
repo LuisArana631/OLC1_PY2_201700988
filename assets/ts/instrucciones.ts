@@ -91,7 +91,7 @@ function nuevaOperacion (operandoIzq:any, operandoDer:any, tipo:any){
         }
       ],
       /* DATOS CLASICOS */
-      operandoIzq: operandoIzq,
+      operandoIzq: [operandoIzq],
       operandoDer: operandoDer,
       tipo: tipo
     }
@@ -191,6 +191,17 @@ function nuevaClase(id:any, instrucciones:any){
 }
 
 export const instruccionesAPI = {
+  /* OBJ PARA NEGACION */
+  nuevaNegacion: function(interior:any){
+    return{
+      text: "Not",
+      state:{opened:true},
+      children: [
+        interior
+      ]
+    }
+  },
+
   /* OBJ PARA EVITAR EL ERROR */
   nuevoError: function(error:any){
     return{
@@ -456,6 +467,12 @@ export const instruccionesAPI = {
 
   /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
   nuevoDeclaracionVarValor: function(identificadores:any, tipo:any, valor:any){
+    if(countEjecuciones === 1){
+      guia.addGuia(new nodoGuia(tipo,identificadores,undefined,"Variable",undefined,undefined));
+    }else{
+  
+    }
+
     return{
         /* PARA JSTREE */
         text: "Variable",
@@ -490,6 +507,11 @@ export const instruccionesAPI = {
 
   /* OBJ PARA DECLARACION DE VARIABLES VACIAS*/
   nuevoDeclaracionVar: function(identificadores:any, tipo:any){
+    if(countEjecuciones === 1){
+      guia.addGuia(new nodoGuia(tipo,identificadores,undefined,"Variable",undefined,undefined));
+    }else{
+  
+    }
     return{
       /* PARA JSTREE */
       text: "Variable",
@@ -557,7 +579,7 @@ export const instruccionesAPI = {
         },{
           text: "Instrucciones",
           state:{opened:true},
-          children: instrucciones
+          children: [instrucciones]
         }
       ],
       /* DATOS CLASICOS */

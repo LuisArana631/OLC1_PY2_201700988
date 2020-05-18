@@ -152,7 +152,7 @@ sentencia
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoIf($3,$5); }
   |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
   |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
-  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
   |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
   |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
   |RFOR PARIZQ IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
@@ -185,7 +185,7 @@ instruccion
   /* SENTENCIA WHILE */
   |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
   /* SENTENCIA DO WHILE */
-  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
   /* SENTENCIA FOR */
   |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
   |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
@@ -223,6 +223,19 @@ aux_expresion_cadena
 llamada
   :IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1,$3); }
   |IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstancia($1); };
+
+expresion_numerica_par
+  :expresion_numerica_par MAS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
+  |expresion_numerica_par MENOS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.RESTA); }
+  |expresion_numerica_par MULTIPLICACION expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MULTIPLICACION); }
+  |expresion_numerica_par DIVISION expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
+  |expresion_numerica_par MODULO expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
+  |expresion_numerica_par POTENCIA expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |MENOS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NEGATIVO); }
+  |incremento_decremento { $$ = $1; }
+  |valor_numerico { $$ = $1; }
+  |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
+  |llamada { $$ = $1; };
 
 expresion_numerica
   :expresion_numerica MAS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
@@ -274,9 +287,13 @@ valor_booleano
   |RFALSE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); };
 
 expresion_relacional
-  :valores_expresion_relacional IGUALDAD valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
-  |valores_expresion_relacional DISTINTO valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
-  |valores_expresion_relacional MAYOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
+  :expresion_may_men IGUALDAD expresion_may_men { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
+  |expresion_may_men DISTINTO expresion_may_men { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
+  |NOT expresion_relacional { $$ = instruccionesAPI.nuevaNegacion($2); }
+  |expresion_may_men { $$ = $1; };
+  
+expresion_may_men
+  :valores_expresion_relacional MAYOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
   |valores_expresion_relacional MENOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_QUE); }
   |valores_expresion_relacional MAYORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_IGUAL); }
   |valores_expresion_relacional MENORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_IGUAL); }
@@ -291,8 +308,7 @@ expresion_logica
   :expresion_logica AND expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.AND); }
   |expresion_logica OR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.OR); }
   |NOT PARIZQ expresion_logica AND expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.AND), TIPO_OPERACION.NOT); }
-  |NOT PARIZQ expresion_logica OR expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.OR), TIPO_OPERACION.NOT); }
-  |NOT expresion_relacional { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NOT); }
+  |NOT PARIZQ expresion_logica OR expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.OR), TIPO_OPERACION.NOT); }  
   |expresion_relacional { $$ = $1; };
 
 casos
