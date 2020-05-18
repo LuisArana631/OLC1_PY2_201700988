@@ -153,12 +153,13 @@ sentencia
   |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
   |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
   |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$13); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$12); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$12); }
   |incremento_decremento PTOCOMA { $$ = $1; }
   |valor_transferencia PTOCOMA { $$ = $1; }
+  |llamada PTOCOMA { $$ = $1; }
   |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$1,this._$.first_line,$1)); $$ = instruccionesAPI.nuevoError($1);};
 
 instruccion
@@ -187,10 +188,10 @@ instruccion
   /* SENTENCIA DO WHILE */
   |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
   /* SENTENCIA FOR */
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
   /* DECLARACION DE FUNCIONES */
   |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
   |RVOID RMAIN PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
@@ -199,6 +200,8 @@ instruccion
   |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
   /* INCREMENTO Y DECREMENTO */
   |incremento_decremento PTOCOMA { $$ = $1; }
+  /* LLAMADA DE FUNCIONES */ 
+  |llamada PTOCOMA { $$ = $1; }
   /* ERRORES */
   |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$1,this._$.first_line,$1)); $$ = instruccionesAPI.nuevoError($1);};
 
@@ -214,6 +217,7 @@ aux_expresion_cadena
   |aux_expresion_cadena DIVISION aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
   |aux_expresion_cadena MODULO aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
   |aux_expresion_cadena POTENCIA aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |MENOS aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NEGATIVO); }
   |incremento_decremento { $$ = $1; }
   |PARIZQ aux_expresion_cadena PARDER { $$ = $2; }
   |valor_numerico { $$ = $1; }
@@ -221,8 +225,8 @@ aux_expresion_cadena
   |llamada { $$ = $1; };
 
 llamada
-  :IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1,$3); }
-  |IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstancia($1); };
+  :IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1); }
+  |IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstancia($1,$3); };
 
 expresion_numerica_par
   :expresion_numerica_par MAS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
@@ -256,11 +260,7 @@ parametros
   |parametro  { $$ = [$1]};
 
 parametro
-  :IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
-  |CADENA { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.CADENA); }
-  |valor_numerico { $$ = $1; }
-  |valor_booleano { $$ = $1; }
-  |llamada { $$ = $1; };
+  :expresion_logica { $$ = $1; };
 
 tipo_dato
   :RINT { $$ = $1; }
