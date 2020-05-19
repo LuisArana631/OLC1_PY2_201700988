@@ -155,6 +155,7 @@ function nuevaClase(id, instrucciones) {
         guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(undefined, id, undefined, "Clase", undefined, instrucciones));
     }
     else {
+        guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(undefined, id, undefined, "Clase", undefined, instrucciones));
     }
     return {
         /* PARA JSTREE */
@@ -353,9 +354,10 @@ exports.instruccionesAPI = {
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFun: function (tipoFun, identificador, instrucciones) {
         if (router_express_1.countEjecuciones === 1) {
-            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(undefined, identificador, undefined, "Funcion", undefined, instrucciones));
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipoFun, identificador, undefined, "Funcion", undefined, instrucciones));
         }
         else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipoFun, identificador, undefined, "Funcion", undefined, instrucciones.children));
         }
         return {
             /* PARA JSTREE */
@@ -396,6 +398,7 @@ exports.instruccionesAPI = {
             guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipoFun, identificador, undefined, "Funcion", parametros, instrucciones.children));
         }
         else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipoFun, identificador, undefined, "Funcion", parametros, instrucciones.children));
         }
         return {
             /* PARA JSTREE */

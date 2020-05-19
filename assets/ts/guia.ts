@@ -35,8 +35,7 @@ export class guia extends Array<nodoGuia>{
         this.prototype.forEach(item => {            
             if(item.TipoCopia == "Variable"){                
                 if(revisar.TipoCopia == "Variable" ){                    
-                    if(item.Tipo == revisar.Tipo){                    
-                        var verificarIdentificador = true;
+                    if(item.Tipo == revisar.Tipo){                                            
                         item.Identificador.forEach(ident => {
                             revisar.Identificador.forEach(identifi => {
                                 if(ident == identifi){
@@ -45,11 +44,51 @@ export class guia extends Array<nodoGuia>{
                             });
                         });                                          
                     }
-                }                
-            }else if(item.TipoCopia === "Funcion"){
+                }      
 
-            }else{
+            }else if(item.TipoCopia == "Funcion"){
+                var siSonParametros = true;
+                if(revisar.TipoCopia == "Funcion"){
+                    if(item.Tipo == revisar.Tipo){
+                        if(item.Identificador == revisar.Identificador){                            
+                            if(item.Param || revisar.Param){                                                  
+                                if(item.CountParam == revisar.CountParam){
+                                    var posI = 0;
+                                    while(posI < item.CountParam){
+                                        if(item.Param[posI].tipo == revisar.Param[posI].tipo){
+                                            console.log("Mismo tipo: "+item.Param[posI].tipo);
+                                            if(item.Param[posI].parametro == revisar.Param[posI].parametro){
+                                                console.log("Son copias");
+                                            }else{
+                                                siSonParametros = false;            
+                                            }                                    
+                                        }else{
+                                            siSonParametros = false;        
+                                        }
+                                        posI++;
+                                    }                       
+                                }else{
+                                    siSonParametros = false;
+                                }                                                                
 
+                            }
+                                if(siSonParametros){                                    
+                                    copias.addCopia(revisar);
+                                }   
+                                                                                                                                                                    
+
+                        }
+                    }
+                }
+                
+            }else{                
+                if(revisar.TipoCopia == "Clase"){                    
+                    if(revisar.Identificador == item.Identificador){                        
+                        if(revisar.CountMetodos == item.CountMetodos){
+                            copias.addCopia(revisar);
+                        }
+                    }
+                }
             }
         });        
     }

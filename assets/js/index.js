@@ -219,20 +219,68 @@ function Conn() {
             let tableFunciones = document.getElementById('tablaFunciones');
             let tableClases = document.getElementById('tablaClases');
             var iVar = tableVariables.rows.length;
+            var iFun = tableFunciones.rows.length;
+            var iClass = tableClases.rows.length;
             while (iVar > 1) {
                 iVar--;
                 tableVariables.deleteRow(iVar);
             }
+            while (iFun > 1) {
+                iFun--;
+                tableFunciones.deleteRow(iFun);
+            }
+            while (iClass > 1) {
+                iClass--;
+                tableClases.deleteRow(iClass);
+            }
             if (tableVariables) {
                 data.forEach(variables => {
-                    let newRow = tableVariables.insertRow(tableVariables.rows.length);
-                    let no = newRow.insertCell(0);
-                    let tipo = newRow.insertCell(1);
-                    let id = newRow.insertCell(2);
-                    no.innerHTML = conteoVariables.toString();
-                    tipo.innerHTML = variables.tipo;
-                    id.innerHTML = variables.identificador;
-                    conteoVariables++;
+                    if (variables.tipoCopia == "Variable") {
+                        let newRow = tableVariables.insertRow(tableVariables.rows.length);
+                        let no = newRow.insertCell(0);
+                        let tipo = newRow.insertCell(1);
+                        let id = newRow.insertCell(2);
+                        no.innerHTML = conteoVariables.toString();
+                        tipo.innerHTML = variables.tipo;
+                        id.innerHTML = variables.identificador;
+                        conteoVariables++;
+                    }
+                });
+            }
+            if (tableFunciones) {
+                data.forEach(funcion => {
+                    if (funcion.tipoCopia == "Funcion") {
+                        let newRow = tableFunciones.insertRow(tableFunciones.rows.length);
+                        let no = newRow.insertCell(0);
+                        let tipo = newRow.insertCell(1);
+                        let id = newRow.insertCell(2);
+                        let parametros = newRow.insertCell(3);
+                        no.innerHTML = conteoFunciones.toString();
+                        tipo.innerHTML = funcion.tipo;
+                        id.innerHTML = funcion.identificador;
+                        var parame = "";
+                        if (funcion.param) {
+                            funcion.param.forEach(par => {
+                                parame = par.parametro + "," + parame;
+                            });
+                        }
+                        parametros.innerHTML = parame;
+                        conteoFunciones++;
+                    }
+                });
+            }
+            if (tableClases) {
+                data.forEach(funcion => {
+                    if (funcion.tipoCopia == "Clase") {
+                        let newRow = tableClases.insertRow(tableClases.rows.length);
+                        let no = newRow.insertCell(0);
+                        let id = newRow.insertCell(1);
+                        let metodos = newRow.insertCell(2);
+                        no.innerHTML = conteoClases.toString();
+                        id.innerHTML = funcion.identificador;
+                        metodos.innerHTML = (funcion.countMetodos + 1).toString();
+                        conteoClases++;
+                    }
                 });
             }
         }

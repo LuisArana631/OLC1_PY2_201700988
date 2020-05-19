@@ -161,7 +161,7 @@ function nuevaClase(id:any, instrucciones:any){
   if(countEjecuciones === 1){
     guia.addGuia(new nodoGuia(undefined,id,undefined,"Clase",undefined,instrucciones));
   }else{
-
+    guia.esCopia(new nodoCopia(undefined,id,undefined,"Clase",undefined,instrucciones));
   }
 
   return{
@@ -377,9 +377,9 @@ export const instruccionesAPI = {
   /* OBJ PARA DECLARACION DE FUNCIONES */
   nuevaDeclaracionFun: function (tipoFun:any, identificador:any, instrucciones:any){
     if(countEjecuciones === 1){
-      guia.addGuia(new nodoGuia(undefined,identificador,undefined,"Funcion",undefined,instrucciones));
+      guia.addGuia(new nodoGuia(tipoFun,identificador,undefined,"Funcion",undefined,instrucciones));
     }else{
-  
+      guia.esCopia(new nodoCopia(tipoFun,identificador,undefined,"Funcion",undefined,instrucciones.children));
     }
 
     return{
@@ -421,7 +421,7 @@ export const instruccionesAPI = {
     if(countEjecuciones === 1){
       guia.addGuia(new nodoGuia(tipoFun,identificador,undefined,"Funcion",parametros,instrucciones.children));
     }else{
-  
+      guia.esCopia(new nodoCopia(tipoFun,identificador,undefined,"Funcion",parametros,instrucciones.children));
     }
 
     return{

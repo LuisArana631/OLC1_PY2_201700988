@@ -14,7 +14,7 @@ export class copias extends Array<nodoCopia>{
             this.prototype.pop();
         }
     }
-
+    
     public static getLength():number{
         return this.prototype.length;
     }

@@ -1,6 +1,7 @@
 import { Router,Request,Response, response } from 'express';
 import { errores } from './errores';
 import { copias } from './copias';
+import { guia } from './guia';
 import * as analizador from '../jison/analizador';
 
 const router = Router();
@@ -25,6 +26,9 @@ router.get('/copias/', (req:Request, res:Response) => {
 });
 
 router.get('/restablecer/', (req:Request, res:Response) => {
+    errores.clear();
+    copias.clear();
+    guia.clear();
     countEjecuciones = 0;
     res.send("Restablecido " +countEjecuciones);
 });
