@@ -124,6 +124,18 @@ instrucciones
   :instrucciones instruccion  { $1.push($2); $$ = $1; }
   |instruccion  { $$ = [$1]; };
 
+especiales_sentencias
+  :especiales_sentencias sentencia_especial { $1.push($2); $$ = $1;}
+  |sentencia_especial { $$ = [$1]; };
+
+sentencia_especial
+  :sentencia { $$ = $1 }
+  |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |RVOID RMAIN PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |RVOID IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  |tipo_dato IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); };
+
 sentencias
   :sentencias sentencia { $1.push($2); $$ = $1; }
   |sentencia { $$ = [$1]; };
@@ -133,31 +145,29 @@ sentencia
   |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
   |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
   |tipo_dato lista_id IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
-  |IDENTIFICADOR IGUAL expresion_cadena { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
+  |IDENTIFICADOR IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$5,$8,$6); }
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$5,$6); }
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoElse($3,$5,$7); }
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoIf($3,$5); }
   |RSWITCH PARIZQ expresion_cadena PARDER LLAVIZQ casos LLAVDER { $$ = instruccionesAPI.nuevoSwitch($3,$6); }
   |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
-  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
-  |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
-  |RVOID IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
-  |tipo_dato IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
-  |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$13); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$12); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$12); }
   |incremento_decremento PTOCOMA { $$ = $1; }
-  |valor_transferencia PTOCOMA { $$ = $1; };
+  |valor_transferencia PTOCOMA { $$ = $1; }
+  |llamada PTOCOMA { $$ = $1; }
+  |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$1,this._$.first_line,$1)); $$ = instruccionesAPI.nuevoError($1);};
 
 instruccion
   /* INSTRUCCIONES DE PRINT Y PRINTLN */
   :RPRINTLN PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrintln($3); }
   |RPRINT PARIZQ expresion_cadena PARDER PTOCOMA { $$ = instruccionesAPI.nuevoPrint($3); }
   /* DEFINICION DE CLASES */
-  |RCLASS IDENTIFICADOR LLAVIZQ sentencias LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
+  |RCLASS IDENTIFICADOR LLAVIZQ especiales_sentencias LLAVDER { $$ = instruccionesAPI.nuevaClaseInstrucciones($2,$4); }
   |RCLASS IDENTIFICADOR LLAVIZQ LLAVDER { $$ = instruccionesAPI.nuevaClase($2); }
   /* IMPORTAR CLASES */
   |RIMPORT IDENTIFICADOR PTOCOMA { $$ = instruccionesAPI.nuevoImport($2); }
@@ -165,7 +175,7 @@ instruccion
   |tipo_dato lista_id PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVar($2,$1); }
   |tipo_dato lista_id IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevoDeclaracionVarValor($2,$1,$4); }
   /* ASIGNACION DE VARIABLES */
-  |IDENTIFICADOR IGUAL expresion_cadena { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
+  |IDENTIFICADOR IGUAL expresion_cadena PTOCOMA { $$ = instruccionesAPI.nuevaAsignacion($1,$3); }
   /* SENTENCIA IF */
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if RELSE bloque_sentencias { $$ = instruccionesAPI.nuevoIfElseListElseIf($3,$5,$8,$6); }
   |RIF PARIZQ expresion_logica PARDER bloque_sentencias lista_else_if { $$ = instruccionesAPI.nuevoIfListElseIf($3,$5,$6); }
@@ -176,21 +186,24 @@ instruccion
   /* SENTENCIA WHILE */
   |RWHILE PARIZQ expresion_logica PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoWhile($3,$5); }
   /* SENTENCIA DO WHILE */
-  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
+  |RDO bloque_sentencias RWHILE PARIZQ expresion_logica PARDER PTOCOMA { $$ = instruccionesAPI.nuevoDoWhile($5,$2); }
   /* SENTENCIA FOR */
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL valor_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
-  |RFOR PARIZQ IDENTIFICADOR IGUAL valo_numerico PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PTOCOMA PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ RINT IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($4,$6,$8,$11,$14); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR INCREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
+  |RFOR PARIZQ IDENTIFICADOR IGUAL expresion_numerica PTOCOMA expresion_relacional PTOCOMA IDENTIFICADOR DECREMENTO PARDER bloque_sentencias { $$ = instruccionesAPI.nuevoFor($3,$5,$7,$10,$13); }
   /* DECLARACION DE FUNCIONES */
   |RVOID IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
+  |RVOID RMAIN PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
   |RVOID IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
   |tipo_dato IDENTIFICADOR PARIZQ PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFun($1,$2,$5); }
   |tipo_dato IDENTIFICADOR PARIZQ parametros_fun PARDER bloque_sentencias { $$ = instruccionesAPI.nuevaDeclaracionFunParametros($1,$2,$4,$6); }
   /* INCREMENTO Y DECREMENTO */
   |incremento_decremento PTOCOMA { $$ = $1; }
+  /* LLAMADA DE FUNCIONES */ 
+  |llamada PTOCOMA { $$ = $1; }
   /* ERRORES */
-  |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+yytext,this._$.first_line,yytext)); };
+  |error { cErrores.errores.addError(new cNodoError.nodoError("Sintactico","No se esperaba el caracter: "+$1,this._$.first_line,$1)); $$ = instruccionesAPI.nuevoError($1);};
 
 expresion_cadena
   :expresion_cadena MAS expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
@@ -204,6 +217,7 @@ aux_expresion_cadena
   |aux_expresion_cadena DIVISION aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
   |aux_expresion_cadena MODULO aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
   |aux_expresion_cadena POTENCIA aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |MENOS aux_expresion_cadena { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NEGATIVO); }
   |incremento_decremento { $$ = $1; }
   |PARIZQ aux_expresion_cadena PARDER { $$ = $2; }
   |valor_numerico { $$ = $1; }
@@ -211,8 +225,21 @@ aux_expresion_cadena
   |llamada { $$ = $1; };
 
 llamada
-  :IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1,$3); }
-  |IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstancia($1); };
+  :IDENTIFICADOR PARIZQ PARDER { $$ = instruccionesAPI.nuevaInstanciaParametros($1); }
+  |IDENTIFICADOR PARIZQ parametros PARDER { $$ = instruccionesAPI.nuevaInstancia($1,$3); };
+
+expresion_numerica_par
+  :expresion_numerica_par MAS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
+  |expresion_numerica_par MENOS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.RESTA); }
+  |expresion_numerica_par MULTIPLICACION expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MULTIPLICACION); }
+  |expresion_numerica_par DIVISION expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DIVISION); }
+  |expresion_numerica_par MODULO expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.MODULO); }
+  |expresion_numerica_par POTENCIA expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.POTENCIA); }
+  |MENOS expresion_numerica_par { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NEGATIVO); }
+  |incremento_decremento { $$ = $1; }
+  |valor_numerico { $$ = $1; }
+  |IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
+  |llamada { $$ = $1; };
 
 expresion_numerica
   :expresion_numerica MAS expresion_numerica { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.SUMA); }
@@ -233,11 +260,7 @@ parametros
   |parametro  { $$ = [$1]};
 
 parametro
-  :IDENTIFICADOR { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.IDENTIFICADOR); }
-  |CADENA { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.CADENA); }
-  |valor_numerico { $$ = $1; }
-  |valor_booleano { $$ = $1; }
-  |llamada { $$ = $1; };
+  :expresion_logica { $$ = $1; };
 
 tipo_dato
   :RINT { $$ = $1; }
@@ -252,7 +275,7 @@ lista_id
 
 valor_transferencia
   :RBREAK { $$ = $1; }
-  |RRETURN expresionCadena { $$ = instruccionesAPI.nuevoReturn($2); }
+  |RRETURN expresion_cadena { $$ = instruccionesAPI.nuevoReturn($2); }
   |RCONTINUE { $$ = $1; };
 
 valor_numerico
@@ -264,9 +287,13 @@ valor_booleano
   |RFALSE { $$ = instruccionesAPI.nuevoValor($1,TIPO_VALOR.BOOLEAN); };
 
 expresion_relacional
-  :valores_expresion_relacional IGUALDAD valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
-  |valores_expresion_relacional DISTINTO valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
-  |valores_expresion_relacional MAYOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
+  :expresion_may_men IGUALDAD expresion_may_men { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.IGUALDAD); }
+  |expresion_may_men DISTINTO expresion_may_men { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.DISTINTO); }
+  |NOT expresion_relacional { $$ = instruccionesAPI.nuevaNegacion($2); }
+  |expresion_may_men { $$ = $1; };
+  
+expresion_may_men
+  :valores_expresion_relacional MAYOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_QUE); }
   |valores_expresion_relacional MENOR valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_QUE); }
   |valores_expresion_relacional MAYORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MAYOR_IGUAL); }
   |valores_expresion_relacional MENORIGUAL valores_expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3, TIPO_OPERACION.MENOR_IGUAL); }
@@ -281,8 +308,7 @@ expresion_logica
   :expresion_logica AND expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.AND); }
   |expresion_logica OR expresion_relacional { $$ = instruccionesAPI.nuevaOperacionBinaria($1,$3,TIPO_OPERACION.OR); }
   |NOT PARIZQ expresion_logica AND expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.AND), TIPO_OPERACION.NOT); }
-  |NOT PARIZQ expresion_logica OR expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.OR), TIPO_OPERACION.NOT); }
-  |NOT expresion_relacional { $$ = instruccionesAPI.nuevaOperacionUnaria($2, TIPO_OPERACION.NOT); }
+  |NOT PARIZQ expresion_logica OR expresion_relacional PARDER { $$ = instruccionesAPI.nuevaOperacionUnaria(instruccionesAPI.nuevaOperacionBinaria($3,$5, TIPO_OPERACION.OR), TIPO_OPERACION.NOT); }  
   |expresion_relacional { $$ = $1; };
 
 casos

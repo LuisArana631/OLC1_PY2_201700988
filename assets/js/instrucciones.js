@@ -1,5 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const router_express_1 = require("./router_express");
+const guia_1 = require("./guia");
+const nodoGuia_1 = require("./nodoGuia");
+const nodoCopia_1 = require("./nodoCopia");
 exports.TIPO_VALOR = {
     NUMERO: 'VAL_NUMERO',
     IDENTIFICADOR: 'VAL_IDENTIFICADOR',
@@ -28,6 +32,8 @@ exports.TIPO_OPERACION = {
     AND: 'OP_AND',
     OR: 'OP_OR',
     NOT: 'OP_NOT',
+    /* ERROR */
+    ERROR: 'OP_ERROR',
 };
 exports.TIPO_INSTRUCCION = {
     CLASS: 'IN_CLASS',
@@ -58,29 +64,161 @@ exports.TIPO_TRANSFERENCIA = {
     CASE: 'TR_CASE',
 };
 function nuevaOperacion(operandoIzq, operandoDer, tipo) {
-    return {
-        operandoIzq: operandoIzq,
-        operandoDer: operandoDer,
-        tipo: tipo
-    };
+    if (operandoDer === "undefined") {
+        return {
+            /* PARA JSTREE */
+            text: "Operacion",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipo,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Operador",
+                    state: { opened: true },
+                    children: [operandoIzq]
+                }
+            ],
+            /* DATOS CLASICOS */
+            operandoIzq: [operandoIzq],
+            operandoDer: operandoDer,
+            tipo: tipo
+        };
+    }
+    else {
+        return {
+            /* PARA JSTREE */
+            text: "Operacion",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipo,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Operador Izquierdo",
+                    state: { opened: true },
+                    children: [operandoIzq]
+                }, {
+                    text: "Operador Derecho",
+                    state: { opened: true },
+                    children: [operandoDer]
+                }
+            ],
+            /* DATOS CLASICOS */
+            operandoIzq: operandoIzq,
+            operandoDer: operandoDer,
+            tipo: tipo
+        };
+    }
 }
 function nuevaLlamadaFuncion(id, parametros) {
     return {
+        /* PARA JSTREE */
+        text: "Llamada a Funcion",
+        state: { opened: true },
+        children: [
+            {
+                text: "Identificador",
+                state: { opened: true },
+                children: [
+                    {
+                        text: id,
+                        state: { opened: true }
+                    }
+                ]
+            }, {
+                text: "Parametros",
+                state: { opened: true },
+                children: parametros
+            }
+        ],
+        /* DATOS CLASICOS */
         id: id,
         parametros: parametros
     };
 }
+/* OBJ PARA CLASE */
 function nuevaClase(id, instrucciones) {
+    if (router_express_1.countEjecuciones === 1) {
+        guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(undefined, id, undefined, "Clase", undefined, instrucciones));
+    }
+    else {
+        guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(undefined, id, undefined, "Clase", undefined, instrucciones));
+    }
     return {
+        /* PARA JSTREE */
+        text: "Clase",
+        state: { opened: true },
+        children: [
+            {
+                text: "Identificador",
+                state: { opened: true },
+                children: [
+                    {
+                        text: id,
+                        state: { opened: true }
+                    }
+                ]
+            }, {
+                text: "Instrucciones",
+                state: { opened: true },
+                children: instrucciones
+            }
+        ],
+        /* DATOS CLASICOS */
         tipo: exports.TIPO_INSTRUCCION.CLASS,
         id: id,
         instrucciones: instrucciones
     };
 }
 exports.instruccionesAPI = {
+    /* OBJ PARA NEGACION */
+    nuevaNegacion: function (interior) {
+        return {
+            text: "Not",
+            state: { opened: true },
+            children: [
+                interior
+            ]
+        };
+    },
+    /* OBJ PARA EVITAR EL ERROR */
+    nuevoError: function (error) {
+        return {
+            text: "Error",
+            state: { opened: true },
+            icon: "https://png-4.findicons.com/files/icons/1014/ivista/16/error.png",
+            children: [
+                {
+                    text: error,
+                    state: { opened: true },
+                    icon: "https://png-4.findicons.com/files/icons/1014/ivista/16/error.png"
+                }
+            ]
+        };
+    },
     /* OBJ PARA RETURN */
     nuevoReturn: function (valor) {
         return {
+            /* PARA JSTREE */
+            text: "Return",
+            state: { opened: true },
+            children: [
+                valor
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.RETURN,
             valor: valor
         };
@@ -88,6 +226,11 @@ exports.instruccionesAPI = {
     /* OBJ PARA BLOQUE DE SENTENCIAS */
     nuevoBloqueSentencias: function (instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Bloque de Sentencias",
+            state: { opened: true },
+            children: instrucciones,
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.BLOQUE_SENTENCIAS,
             instrucciones: instrucciones
         };
@@ -95,6 +238,19 @@ exports.instruccionesAPI = {
     /* OBJ PARA ASIGNACION DE VARIABLES */
     nuevaAsignacion: function (identificador, valor) {
         return {
+            /* PARA JSTREE */
+            text: "Asignacion",
+            state: { opened: true },
+            children: [
+                {
+                    text: identificador,
+                    state: { opened: true },
+                    children: [
+                        valor
+                    ]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ASIGNACION,
             identificador: identificador,
             valor: valor
@@ -103,6 +259,16 @@ exports.instruccionesAPI = {
     /* OBJ PARA HACER IMPORTS */
     nuevoImport: function (identificador) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Import",
+            state: { opened: true },
+            children: [
+                {
+                    text: identificador,
+                    state: { opened: true }
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IMPORT,
             identificador: identificador
         };
@@ -118,12 +284,36 @@ exports.instruccionesAPI = {
     /* OBJ PARA PARAMETROS */
     nuevoParametros: function (parametro) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Parametro",
+            state: { opened: true },
+            children: [
+                parametro
+            ],
+            /* DATOS CLASICOS */
             parametro: parametro
         };
     },
     /* OBJ PARAMETRO DE FUNCION */
     nuevoParametroFun: function (tipo, parametro) {
         return {
+            /* DATOS PARA JSTREE */
+            text: "Parametro",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipo,
+                            state: { opened: true }
+                        }
+                    ]
+                },
+                parametro
+            ],
+            /* DATOS CLASICOS */
             tipo: tipo,
             parametro: parametro
         };
@@ -139,13 +329,23 @@ exports.instruccionesAPI = {
     /* OBJ PARA CREAR UNA VARIABLE */
     nuevoValor: function (valor, tipo) {
         return {
+            /* PARA JSTREE */
+            text: tipo,
+            state: { opened: true },
+            children: [
+                {
+                    text: valor,
+                    state: { opened: true }
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: tipo,
             valor: valor
         };
     },
     /* OBJ OPERACION CON UN VALOR */
     nuevaOperacionUnaria: function (operando, tipo) {
-        return nuevaOperacion(operando, undefined, tipo);
+        return nuevaOperacion(operando, "undefined", tipo);
     },
     /* OBJ PARA OPERACION CON DOS VALORES */
     nuevaOperacionBinaria: function (operandoIzq, operandoDer, tipo) {
@@ -153,7 +353,39 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFun: function (tipoFun, identificador, instrucciones) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipoFun, identificador, undefined, "Funcion", undefined, instrucciones));
+        }
+        else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipoFun, identificador, undefined, "Funcion", undefined, instrucciones.children));
+        }
         return {
+            /* PARA JSTREE */
+            text: "Funcion",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipoFun,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Identificador",
+                    state: { opened: true },
+                    children: [{
+                            text: identificador
+                        }]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
             tipoFun: tipoFun,
             identificador: identificador,
@@ -162,7 +394,46 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE FUNCIONES */
     nuevaDeclaracionFunParametros: function (tipoFun, identificador, parametros, instrucciones) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipoFun, identificador, undefined, "Funcion", parametros, instrucciones.children));
+        }
+        else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipoFun, identificador, undefined, "Funcion", parametros, instrucciones.children));
+        }
         return {
+            /* PARA JSTREE */
+            text: "Funcion",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipoFun,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Identificador",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: identificador,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Parametros",
+                    state: { opened: true },
+                    children: parametros
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_FUN,
             tipoFun: tipoFun,
             identificador: identificador,
@@ -172,7 +443,37 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE VARIABLES CON VALOR */
     nuevoDeclaracionVarValor: function (identificadores, tipo, valor) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
+        else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
         return {
+            /* PARA JSTREE */
+            text: "Variable",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipo,
+                            state: { opened: true }
+                        }
+                    ]
+                }, {
+                    text: "Identificadores",
+                    state: { opened: true },
+                    children: identificadores
+                }, {
+                    text: "Valor",
+                    state: { opened: true },
+                    children: [valor]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
             identificadores: identificadores,
             tipo_dato: tipo,
@@ -181,7 +482,33 @@ exports.instruccionesAPI = {
     },
     /* OBJ PARA DECLARACION DE VARIABLES VACIAS*/
     nuevoDeclaracionVar: function (identificadores, tipo) {
+        if (router_express_1.countEjecuciones === 1) {
+            guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
+        else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipo, identificadores, undefined, "Variable", undefined, undefined));
+        }
         return {
+            /* PARA JSTREE */
+            text: "Variable",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Tipo",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: tipo,
+                            state: { opened: true },
+                        }
+                    ]
+                }, {
+                    text: "Identificadores",
+                    state: { opened: true },
+                    children: identificadores
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DECLARACION_VAR,
             identificadores: identificadores,
             tipo_dato: tipo
@@ -190,6 +517,11 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION PRINT */
     nuevoPrint: function (expresionCadena) {
         return {
+            /* PARA JSTREE */
+            text: "System.out.print",
+            state: { opened: true },
+            children: [expresionCadena],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINT,
             expresionCadena: expresionCadena
         };
@@ -197,12 +529,33 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION PRINTLN */
     nuevoPrintln: function (expresionCadena) {
         return {
+            /* PARA JSTREE */
+            text: "System.out.println",
+            state: { opened: true },
+            children: [expresionCadena],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.PRINTLN,
             expresionCadena: expresionCadena
         };
     },
+    /* OBJ PARA INSTRUCCION DO WHILE */
     nuevoDoWhile: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Do While",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.DO_WHILE,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -211,6 +564,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION WHILE */
     nuevoWhile: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "While",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.WHILE,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -219,6 +587,43 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION FOR */
     nuevoFor: function (variable, val, expresionLogica, aod, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "For",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condiciones",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: "Variable",
+                            state: { opened: true },
+                            children: [
+                                {
+                                    text: variable,
+                                    state: { opened: true },
+                                    children: [
+                                        val
+                                    ]
+                                }
+                            ]
+                        }, {
+                            text: "Expresion logica",
+                            state: { opened: true },
+                            children: [expresionLogica]
+                        }, {
+                            text: "Incremento/Decremento",
+                            state: { opened: true },
+                            children: [variable + aod]
+                        }
+                    ]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.FOR,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones,
@@ -230,6 +635,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION IF */
     nuevoIf: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instrucciones]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -238,6 +658,31 @@ exports.instruccionesAPI = {
     /* OBJ PARA INSTRUCCION ELSE */
     nuevoElse: function (expresionLogica, instruccionesTrue, instruccionesFalse) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instruccionesTrue]
+                }, {
+                    text: "Else",
+                    state: { opened: true },
+                    children: [
+                        {
+                            text: "Instrucciones",
+                            state: { opened: true },
+                            children: [instruccionesFalse]
+                        }
+                    ]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE,
             expresionLogica: expresionLogica,
             instruccionesTrue: instruccionesTrue,
@@ -247,6 +692,25 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA LISTA DE ELSE IF */
     nuevoIfListElseIf: function (expresionLogica, instrucciones, list_elseif) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: instrucciones
+                }, {
+                    text: "Lista Else If",
+                    state: { opened: true },
+                    children: list_elseif
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones,
@@ -256,6 +720,29 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA LISTA DE ELSE IF CUANDO EXISTE UN ELSE */
     nuevoIfElseListElseIf: function (expresionLogica, instruccionesTrue, instruccionesFalse, list_elseif) {
         return {
+            /* PARA JSTREE */
+            text: "If",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: [instruccionesTrue]
+                }, {
+                    text: "Lista Else If",
+                    state: { opened: true },
+                    children: list_elseif
+                }, {
+                    text: "Else",
+                    state: { opened: true },
+                    children: [instruccionesFalse]
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE,
             expresionLogica: expresionLogica,
             instruccionesTrue: instruccionesTrue,
@@ -266,6 +753,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA INSTRUCCION ELSE IF */
     nuevoElseIf: function (expresionLogica, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Else if",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Condicion",
+                    state: { opened: true },
+                    children: [expresionLogica]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.ELSE_IF,
             expresionLogica: expresionLogica,
             instrucciones: instrucciones
@@ -274,6 +776,21 @@ exports.instruccionesAPI = {
     /* OBJ PARA LA INSTRUCCION SWITCH */
     nuevoSwitch: function (expresionNumerica, casos) {
         return {
+            /* PARA JSTREE */
+            text: "Switch",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Expresion",
+                    state: { opened: true },
+                    children: [expresionNumerica]
+                }, {
+                    text: "Casos",
+                    state: { opened: true },
+                    children: casos
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_INSTRUCCION.SWITCH,
             expresionNumerica: expresionNumerica,
             casos: casos
@@ -282,6 +799,21 @@ exports.instruccionesAPI = {
     /* OBJ CASE PARA SWITCH */
     nuevoCase: function (expresion, instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Case",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Expresion",
+                    state: { opened: true },
+                    children: [expresion]
+                }, {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.CASE,
             expresion: expresion,
             instrcciones: instrucciones
@@ -290,16 +822,19 @@ exports.instruccionesAPI = {
     /* OBJ DEFAULT PARA SWITCH */
     nuevoDefault: function (instrucciones) {
         return {
+            /* PARA JSTREE */
+            text: "Default",
+            state: { opened: true },
+            children: [
+                {
+                    text: "Instrucciones",
+                    state: { opened: true },
+                    children: instrucciones
+                }
+            ],
+            /* DATOS CLASICOS */
             tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
             instrucciones: instrucciones
-        };
-    },
-    /* OBJ DEFAULT PARA SWITCH CON VALOR DE TRANSFERENCIA */
-    nuevoDefaultTransferencia: function (instrucciones, transferencia) {
-        return {
-            tipo: exports.TIPO_TRANSFERENCIA.DEFAULT,
-            instrucciones: instrucciones,
-            transferencia: transferencia
         };
     },
     /* CREAR OBJ DE TIPO OPERADOR */

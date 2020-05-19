@@ -32,17 +32,17 @@ function index(pestanas, pestana) {
     var list_cont = document.getElementById('contenido' + pestanas);
     var i = 0;
     while (typeof list_cont.getElementsByTagName('div')[i] != 'undefined') {
-        $(document).ready(function () {
-            $(list_cont.getElementsByTagName('div')[i]).css('display', 'none');
-            $(list_pestanas.getElementsByTagName('li')[i]).css('background', '');
-            $(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom', '');
+        $j(document).ready(function () {
+            $j(list_cont.getElementsByTagName('div')[i]).css('display', 'none');
+            $j(list_pestanas.getElementsByTagName('li')[i]).css('background', '');
+            $j(list_pestanas.getElementsByTagName('li')[i]).css('padding-bottom', '');
         });
         i += 1;
     }
-    $(document).ready(function () {
-        $(cont_pestana).css('display', '');
-        $(pestana1).css('background', 'dimgray');
-        $(pestana1).css('padding-bottom', '2px');
+    $j(document).ready(function () {
+        $j(cont_pestana).css('display', '');
+        $j(pestana1).css('background', 'dimgray');
+        $j(pestana1).css('padding-bottom', '2px');
     });
     try {
         var actual = document.getElementById('cpestana' + id);
@@ -130,7 +130,7 @@ function openFile(files) {
             value: text_actual.value,
             theme: "darcula",
             mode: "text/x-java",
-            indentWithTabs: true
+            indentWithTabs: true,
         }).on('change', edit => {
             text_actual.value = edit.getValue();
         });
@@ -179,12 +179,9 @@ class pestana_class {
         return this.nombre;
     }
 }
-// End points de go para conectar con express
-function Conn() {
-    var texto = document.getElementById(get_pest()).value;
-    var urlAnalizar = "http://localhost:3000/analizar/";
-    var urlErrores = "http://localhost:3000/errores/";
-    $.post(urlAnalizar, { text: texto }, function (data, status) {
+function Restablecer() {
+    var urlRestablecer = "http://localhost:3000/restablecer/";
+    $j.get(urlRestablecer, function (data, status) {
         if (status.toString() == 'success') {
             console.log(data);
         }
@@ -192,11 +189,115 @@ function Conn() {
             alert("Error estado de conexion " + status);
         }
     });
-    $.get(urlErrores, function (data, status) {
+}
+let restablecerButton = document.getElementById('btn-restablecer');
+restablecerButton.addEventListener('click', Restablecer, false);
+// End points de go para conectar con express
+function Conn() {
+    var texto = document.getElementById(get_pest()).value;
+    var urlAnalizar = "http://localhost:3000/analizar/";
+    var urlErrores = "http://localhost:3000/errores/";
+    var urlCopias = "http://localhost:3000/copias/";
+    $j.post(urlAnalizar, { text: texto }, function (data, status) {
+        if (status.toString() == 'success') {
+            console.log(data);
+            /* CREAR JSTREE */
+            createJSTree(data);
+        }
+        else {
+            alert("Error estado de conexion " + status);
+        }
+    });
+    $j.get(urlCopias, function (data, status) {
+        console.log(data);
+        if (status.toString() == 'success') {
+            /* PINTAR TABLA DE COPIAS */
+            let conteoVariables = 1;
+            let conteoFunciones = 1;
+            let conteoClases = 1;
+            let tableVariables = document.getElementById('tablaVariables');
+            let tableFunciones = document.getElementById('tablaFunciones');
+            let tableClases = document.getElementById('tablaClases');
+            var iVar = tableVariables.rows.length;
+            var iFun = tableFunciones.rows.length;
+            var iClass = tableClases.rows.length;
+            while (iVar > 1) {
+                iVar--;
+                tableVariables.deleteRow(iVar);
+            }
+            while (iFun > 1) {
+                iFun--;
+                tableFunciones.deleteRow(iFun);
+            }
+            while (iClass > 1) {
+                iClass--;
+                tableClases.deleteRow(iClass);
+            }
+            if (tableVariables) {
+                data.forEach(variables => {
+                    if (variables.tipoCopia == "Variable") {
+                        let newRow = tableVariables.insertRow(tableVariables.rows.length);
+                        let no = newRow.insertCell(0);
+                        let tipo = newRow.insertCell(1);
+                        let id = newRow.insertCell(2);
+                        no.innerHTML = conteoVariables.toString();
+                        tipo.innerHTML = variables.tipo;
+                        id.innerHTML = variables.identificador;
+                        conteoVariables++;
+                    }
+                });
+            }
+            if (tableFunciones) {
+                data.forEach(funcion => {
+                    if (funcion.tipoCopia == "Funcion") {
+                        let newRow = tableFunciones.insertRow(tableFunciones.rows.length);
+                        let no = newRow.insertCell(0);
+                        let tipo = newRow.insertCell(1);
+                        let id = newRow.insertCell(2);
+                        let parametros = newRow.insertCell(3);
+                        no.innerHTML = conteoFunciones.toString();
+                        tipo.innerHTML = funcion.tipo;
+                        id.innerHTML = funcion.identificador;
+                        var parame = "";
+                        if (funcion.param) {
+                            funcion.param.forEach(par => {
+                                parame = par.parametro + "," + parame;
+                            });
+                        }
+                        parametros.innerHTML = parame;
+                        conteoFunciones++;
+                    }
+                });
+            }
+            if (tableClases) {
+                data.forEach(funcion => {
+                    if (funcion.tipoCopia == "Clase") {
+                        let newRow = tableClases.insertRow(tableClases.rows.length);
+                        let no = newRow.insertCell(0);
+                        let id = newRow.insertCell(1);
+                        let metodos = newRow.insertCell(2);
+                        no.innerHTML = conteoClases.toString();
+                        id.innerHTML = funcion.identificador;
+                        metodos.innerHTML = (funcion.countMetodos + 1).toString();
+                        conteoClases++;
+                    }
+                });
+            }
+        }
+        else {
+            alert("Error estado de conexion " + status);
+        }
+    });
+    $j.get(urlErrores, function (data, status) {
         if (status.toString() == 'success') {
             /* PINTAR LA TABLA CON LOS ERRORES */
             let conteo = 1;
             let table = document.getElementById('tablaErrores');
+            var i = table.rows.length;
+            while (i > 1) {
+                i--;
+                table.deleteRow(i);
+            }
             if (table) {
                 data.forEach(error => {
                     let newRow = table.insertRow(table.rows.length);
@@ -217,6 +318,14 @@ function Conn() {
         }
         else {
             alert("Error estado de conexion " + status);
+        }
+    });
+}
+function createJSTree(jsondata) {
+    $('#html').jstree("destroy");
+    $('#html').jstree({
+        'core': {
+            'data': jsondata
         }
     });
 }

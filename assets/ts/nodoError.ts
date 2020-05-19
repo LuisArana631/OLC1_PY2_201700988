@@ -7,7 +7,7 @@ export class nodoError{
     constructor(tipo:string, descripcion:string, linea:number, valor:string){
         this.tipo = tipo;
         this.descripcion = descripcion;
-        this.linea = linea+1;
+        this.linea = linea;
         this.valor = valor; 
     }
 

@@ -4,7 +4,7 @@ class nodoError {
     constructor(tipo, descripcion, linea, valor) {
         this.tipo = tipo;
         this.descripcion = descripcion;
-        this.linea = linea + 1;
+        this.linea = linea;
         this.valor = valor;
     }
     get Tipo() {
