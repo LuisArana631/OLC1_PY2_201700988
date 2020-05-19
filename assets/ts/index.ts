@@ -245,12 +245,52 @@ function Conn(){
 
     var urlAnalizar:string = "http://localhost:3000/analizar/";
     var urlErrores:string = "http://localhost:3000/errores/";        
+    var urlCopias:string = "http://localhost:3000/copias/";
 
     $j.post(urlAnalizar,{text:texto},function(data,status){
         if(status.toString() == 'success'){            
             console.log(data);
             /* CREAR JSTREE */            
             createJSTree(data);            
+        }else{
+            alert("Error estado de conexion "+status);
+        }
+    });
+
+    $j.get(urlCopias, function(data,status){
+        console.log(data);
+
+        if(status.toString() == 'success'){
+            /* PINTAR TABLA DE COPIAS */
+            let conteoVariables:number = 1;
+            let conteoFunciones:number = 1;
+            let conteoClases:number = 1;
+            let tableVariables:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaVariables');
+            let tableFunciones:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaFunciones');
+            let tableClases:HTMLTableElement = <HTMLTableElement> document.getElementById('tablaClases');
+            
+            var iVar = tableVariables.rows.length;
+
+            while(iVar>1){
+                iVar--;
+                tableVariables.deleteRow(iVar);
+            }
+
+            if(tableVariables){
+                data.forEach(variables => {
+                    let newRow = tableVariables.insertRow(tableVariables.rows.length);
+
+                    let no = newRow.insertCell(0);
+                    let tipo = newRow.insertCell(1);
+                    let id = newRow.insertCell(2);
+
+                    no.innerHTML = conteoVariables.toString();
+                    tipo.innerHTML = variables.tipo;
+                    id.innerHTML = variables.identificador;
+
+                    conteoVariables++;
+                });
+            }
         }else{
             alert("Error estado de conexion "+status);
         }
@@ -265,7 +305,7 @@ function Conn(){
             var i = table.rows.length;           
             
             while(i>1){
-                i--
+                i--;
                 table.deleteRow(i);                
             }
 

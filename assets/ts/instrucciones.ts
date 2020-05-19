@@ -1,6 +1,7 @@
 import { countEjecuciones } from "./router_express";
 import { guia } from "./guia";
 import { nodoGuia } from "./nodoGuia";
+import { nodoCopia } from "./nodoCopia";
 
 export const TIPO_VALOR = {
   NUMERO: 'VAL_NUMERO',
@@ -470,7 +471,7 @@ export const instruccionesAPI = {
     if(countEjecuciones === 1){
       guia.addGuia(new nodoGuia(tipo,identificadores,undefined,"Variable",undefined,undefined));
     }else{
-  
+      guia.esCopia(new nodoCopia(tipo,identificadores,undefined,"Variable",undefined,undefined));
     }
 
     return{
@@ -510,7 +511,7 @@ export const instruccionesAPI = {
     if(countEjecuciones === 1){
       guia.addGuia(new nodoGuia(tipo,identificadores,undefined,"Variable",undefined,undefined));
     }else{
-  
+      guia.esCopia(new nodoCopia(tipo,identificadores,undefined,"Variable",undefined,undefined));
     }
     return{
       /* PARA JSTREE */

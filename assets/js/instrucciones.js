@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const router_express_1 = require("./router_express");
 const guia_1 = require("./guia");
 const nodoGuia_1 = require("./nodoGuia");
+const nodoCopia_1 = require("./nodoCopia");
 exports.TIPO_VALOR = {
     NUMERO: 'VAL_NUMERO',
     IDENTIFICADOR: 'VAL_IDENTIFICADOR',
@@ -443,6 +444,7 @@ exports.instruccionesAPI = {
             guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
         }
         else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipo, identificadores, undefined, "Variable", undefined, undefined));
         }
         return {
             /* PARA JSTREE */
@@ -481,6 +483,7 @@ exports.instruccionesAPI = {
             guia_1.guia.addGuia(new nodoGuia_1.nodoGuia(tipo, identificadores, undefined, "Variable", undefined, undefined));
         }
         else {
+            guia_1.guia.esCopia(new nodoCopia_1.nodoCopia(tipo, identificadores, undefined, "Variable", undefined, undefined));
         }
         return {
             /* PARA JSTREE */
